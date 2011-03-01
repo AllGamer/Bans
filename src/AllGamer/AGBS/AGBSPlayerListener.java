@@ -67,6 +67,9 @@ public class AGBSPlayerListener extends PlayerListener {
 							if (message.contains("rac")) {
 								reason += " Racism";
 							}
+							if (message.contains("hax")) {
+								reason += " Hacking";
+							}
 							target.kickPlayer("Kicked by " + player + ". Reason: " + reason);
 						} else {
 							player.sendMessage("Cannot find the specified player! Check your spelling again.");
