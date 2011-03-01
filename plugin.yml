@@ -3,3 +3,8 @@ name: AGBS
 main: AllGamer.AGBS.AGBS
 
 version: 0.1
+
+commands:
+    aban:
+        description: Ban a user with AGBS
+        usage: /<command>
