@@ -14,6 +14,7 @@ import org.bukkit.Server;
 public class AGBSPlayerListener extends PlayerListener {
 	private final AGBS plugin;
 	String message;
+	String reason = "";
 
 	public AGBSPlayerListener(AGBS instance) {
 		plugin = instance;
@@ -37,6 +38,25 @@ public class AGBSPlayerListener extends PlayerListener {
 			}
 		return false;
 	}
+	
+	public String makeReason(String message) {
+		if (message.contains("grf")) {
+			reason += " Griefing";
+		}
+		if (message.contains("rac")) {
+			reason += " Racism";
+		}
+		if (message.contains("hax")) {
+			reason += " Hacking";
+		}
+		if (message.contains("thf")) {
+			reason += " Theft";
+		}
+		if (message.contains("hmo")) {
+			reason += " Homophobic Comments";
+		}
+		return reason;
+	}
 
 	//Insert Player related code here
 	public void onPlayerlogin(PlayerLoginEvent event) {
@@ -59,7 +79,7 @@ public class AGBSPlayerListener extends PlayerListener {
 		if(sender instanceof Player) {
 			player = (Player) sender;
 		}
-		// /a ban [target] [reason]
+
 		if (commandLabel.equals("a")) {
 			if (split[0].equalsIgnoreCase("ban")) {
 				if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) {
@@ -68,23 +88,9 @@ public class AGBSPlayerListener extends PlayerListener {
 						if (arraySearch(onlinePlayers, target)) {
 							make(split, 2);
 							message = message.toLowerCase();
-							String reason = "";
-							if (message.contains("grf")) {
-								reason += " Griefing";
-							}
-							if (message.contains("rac")) {
-								reason += " Racism";
-							}
-							if (message.contains("hax")) {
-								reason += " Hacking";
-							}
-							if (message.contains("thf")) {
-								reason += " Theft";
-							}
-							if (message.contains("hmo")) {
-								reason += " Homophobic Comments";
-							}
+							reason = makeReason(message);
 							target.kickPlayer("Banned by " + player + ". Reason: " + reason);
+							reason = "";
 							server.broadcastMessage("§c[AGBS]" + sender + " has banned " + target);
 							// TODO: code for adding banned name to flatfile/sqlite/mysql here
 							
@@ -106,28 +112,13 @@ public class AGBSPlayerListener extends PlayerListener {
 			if (split[0].equalsIgnoreCase("banip")) {
 				if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) {
 					if (split.length >= 2) {
-						Player target = plugin.getServer().getPlayer(split[1]);
-						
+						Player target = plugin.getServer().getPlayer(split[1]);	
 						if (arraySearch(onlinePlayers, target)) {
 							make(split, 2);
 							message = message.toLowerCase();
-							String reason = "";
-							if (message.contains("grf")) {
-								reason += " Griefing";
-							}
-							if (message.contains("rac")) {
-								reason += " Racism";
-							}
-							if (message.contains("hax")) {
-								reason += " Hacking";
-							}
-							if (message.contains("thf")) {
-								reason += " Theft";
-							}
-							if (message.contains("hmo")) {
-								reason += " Homophobic Comments";
-							}
+							reason = makeReason(message);
 							target.kickPlayer("Banned by " + player + ". Reason: " + reason);
+							reason = "";
 							server.broadcastMessage("§c[AGBS]" + sender + " has banned " + target);
 							// TODO: code for adding banned name to flatfile/sqlite/mysql here
 							
