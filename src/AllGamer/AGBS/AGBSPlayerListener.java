@@ -85,7 +85,7 @@ public class AGBSPlayerListener extends PlayerListener {
 		if(sender instanceof Player) {
 			player = (Player) sender;
 		}
-
+		player.sendMessage("Debug : " + player + server + split + onlinePlayers);
 		if (commandLabel.equals("a")) {
 			if (split[0].equalsIgnoreCase("ban")) {
 				if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) {
