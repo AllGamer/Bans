@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
  * AGBS block listener
  * @author AllGamer
  */
+@SuppressWarnings("unused")
 public class AGBSBlockListener extends BlockListener {
     private final AGBS plugin;
 

@@ -3,7 +3,6 @@ package AllGamer.AGBS;
 import java.io.File;
 import java.util.HashMap;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -22,6 +21,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  *
  * @author AllGamer
  */
+@SuppressWarnings("unused")
 public class AGBS extends JavaPlugin {
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
 	private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
@@ -36,10 +36,10 @@ public class AGBS extends JavaPlugin {
 		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
 		PluginDescriptionFile pdfFile = this.getDescription();
 
-		if (this.Permissions == null) {
+		if (AGBS.Permissions == null) {
 			if (agbs!= null) {
 				this.getServer().getPluginManager().enablePlugin(agbs);
-				this.Permissions = ((Permissions) agbs).getHandler();
+				AGBS.Permissions = ((Permissions) agbs).getHandler();
 			}
 			else {
 				System.out.println(pdfFile.getName() + " version " + pdfFile.getVersion() + " not enabled. Permissions not detected");
