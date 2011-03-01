@@ -55,6 +55,12 @@ public class AGBSPlayerListener extends PlayerListener {
 		if (message.contains("hmo")) {
 			reason += " Homophobic Comments";
 		}
+		if (message.contains("ina")) {
+			reason += " Inappropriate Comments";
+		}
+		if (message.contains("bld")) {
+			reason += " Inappropriate Buildings";
+		}
 		return reason;
 	}
 
