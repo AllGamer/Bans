@@ -59,7 +59,15 @@ public class AGBSPlayerListener extends PlayerListener {
 						Player target = plugin.getServer().getPlayer(split[1]);
 						if (arraySearch(onlinePlayers, target)) {
 							make(split, 2);
-							target.kickPlayer("Kicked by " + player + ". Reason: " + message);
+							message = message.toLowerCase();
+							String reason = "";
+							if (message.contains("grf")) {
+								reason += " Griefing";
+							}
+							if (message.contains("rac")) {
+								reason += " Racism";
+							}
+							target.kickPlayer("Kicked by " + player + ". Reason: " + reason);
 						} else {
 							player.sendMessage("Cannot find the specified player! Check your spelling again.");
 						}
