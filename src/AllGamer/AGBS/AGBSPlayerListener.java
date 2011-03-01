@@ -92,7 +92,7 @@ public class AGBSPlayerListener extends PlayerListener {
 					if (split.length >= 2) {
 						Player target = plugin.getServer().getPlayer(split[1]);
 						if (arraySearch(onlinePlayers, target)) {
-							make(split, 2);
+							message = make(split, 2);
 							message = message.toLowerCase();
 							reason = makeReason(message);
 							target.kickPlayer("Banned by " + player + ". Reason: " + reason);
