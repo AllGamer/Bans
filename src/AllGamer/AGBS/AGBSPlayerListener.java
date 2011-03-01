@@ -43,7 +43,10 @@ public class AGBSPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		@SuppressWarnings("unused")
 		String playerName = player.getName();
-		//Player login things
+		//TODO: check against ban storage locations... maybe isBanned() should be created?
+		
+		
+		//TODO: check against exempt file
 	}
 	
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
@@ -78,8 +81,17 @@ public class AGBSPlayerListener extends PlayerListener {
 							if (message.contains("thf")) {
 								reason += " Theft";
 							}
-							target.kickPlayer("Kicked by " + player + ". Reason: " + reason);
+							if (message.contains("hmo")) {
+								reason += " Homophobic Comments";
+							}
+							target.kickPlayer("Banned by " + player + ". Reason: " + reason);
 							server.broadcastMessage("§c[AGBS]" + sender + " has banned " + target);
+							// TODO: code for adding banned name to flatfile/sqlite/mysql here
+							
+							
+							
+							// TODO: code for sending ban info to the api
+							// TODO: Discuss: should this be done once to clean up code maybe with the syntax banPlayer( target, reason, apikey); ? 
 							
 						} else {
 							player.sendMessage("Cannot find the specified player! Check your spelling again.");
@@ -112,8 +124,18 @@ public class AGBSPlayerListener extends PlayerListener {
 							if (message.contains("thf")) {
 								reason += " Theft";
 							}
-							target.kickPlayer("Kicked by " + player + ". Reason: " + reason);
+							if (message.contains("hmo")) {
+								reason += " Homophobic Comments";
+							}
+							target.kickPlayer("Banned by " + player + ". Reason: " + reason);
 							server.broadcastMessage("§c[AGBS]" + sender + " has banned " + target);
+							// TODO: code for adding banned name to flatfile/sqlite/mysql here
+							
+							
+							
+							// TODO: code for sending ban info to the api
+							// Discuss: should this be done once to clean up code or every time we call it? 
+							
 						} else {
 							player.sendMessage("Cannot find the specified player! Check your spelling again.");
 						}
