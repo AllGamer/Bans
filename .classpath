@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="/home/aetaric/Permissions.jar"/>
 	<classpathentry kind="lib" path="/home/aetaric/Downloads/mysql.jar"/>
 	<classpathentry kind="lib" path="/home/aetaric/Downloads/sqlite.jar"/>
+	<classpathentry kind="lib" path="/home/aetaric/Downloads/snakeyaml-1.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
