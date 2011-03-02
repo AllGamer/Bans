@@ -1,6 +1,8 @@
 package AllGamer.AGBS;
 
+import java.io.*;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -11,6 +13,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.yaml.snakeyaml.*;
 
 // permissions 2.4 imports
 import com.nijiko.permissions.PermissionHandler;
@@ -23,16 +26,33 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  */
 public class AGBS extends JavaPlugin 
 {
+	private final Logger log = Logger.getLogger("Minecraft");
+	public static String logPrefix = "[AGBS]";
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
 	//private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 	String message = "";
 	String reason = "";
 
-	// use permissions 2.5+
+	// use latest permissions
 	public static PermissionHandler Permissions = null;
+	public Configuration config;
+	public Configuration configExempt;
+	public Configuration configBan;
 
+	private AGBSConfiguration confSetup;
 
+	// in case we need it more than once ;)
+	public void configInit()
+	{
+		getDataFolder().mkdirs();
+		config = new Configuration(new File(this.getDataFolder(), "config.yml"));
+		configExempt = new Configuration(new File(this.getDataFolder(), "bans.yml"));
+		configBan = new Configuration(new File(this.getDataFolder(), "exempt.yml"));
+		confSetup = new AGBSConfiguration(this.getDataFolder(), this);
+
+	}
+	
 	// check to see if we have permissions, or fake permissions. Disable if we don't...
 	public void setupPermissions() 
 	{
@@ -55,11 +75,12 @@ public class AGBS extends JavaPlugin
 
 	public void onEnable() 
 	{
-		// TODO: Place any custom enable code here including the registration of any events
 		setupPermissions();
+		configInit();
+		confSetup.setupConfigs();
 		registerListeners();
-		PluginDescriptionFile pdfFile = this.getDescription();
-		System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " enabled!" );
+		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled!");
+		
 	}
 
 	public void onDisable() 
@@ -69,10 +90,9 @@ public class AGBS extends JavaPlugin
 		// NOTE: All registered events are automatically unregistered when a plugin is disabled
 
 		// EXAMPLE: Custom code, here we just output some info so we can check all is well
-		PluginDescriptionFile pdfFile = this.getDescription();
-		System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " disabled!" );
+		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Disabled!");
 	}
-
+	
 	public boolean isDebugging(final Player player) 
 	{
 		if (debugees.containsKey(player)) 
@@ -85,6 +105,7 @@ public class AGBS extends JavaPlugin
 	{
 		debugees.put(player, value);
 	}
+	
 	public void registerListeners() 
 	{
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
@@ -162,7 +183,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
+						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
