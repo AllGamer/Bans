@@ -1,9 +1,6 @@
-name:AGBS
-
-main:AllGamer.AGBS.AGBS
-
-version:0.1
-
+name: AGBS
+main: AllGamer.AGBS.AGBS
+version: 0.1
 commands:
     aban:
         description: Ban a user with AGBS
@@ -14,6 +11,6 @@ commands:
         usage: |
                /<command> [target] [reason flags]
     check:
-        Description: Check a user against the AGBS API
+        description: check a user against the AGBS API
         usage: |
                /<command> [target]
