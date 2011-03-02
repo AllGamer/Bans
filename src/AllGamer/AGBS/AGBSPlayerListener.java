@@ -4,7 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.Server;
 
 /**
@@ -64,29 +63,14 @@ public class AGBSPlayerListener extends PlayerListener {
 		return reason;
 	}
 
-	//Insert Player related code here
-	public void onPlayerlogin(PlayerLoginEvent event) {
-		Player player = event.getPlayer();
-		@SuppressWarnings("unused")
-		String playerName = player.getName();
-		//TODO: check against ban storage locations... maybe isBanned() should be created?
-		
-		
-		//TODO: check against exempt file
-	}
-	
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		Player player = null;
+		Player player = (Player) sender;
 		Server server = plugin.getServer();
 		String[] split = args;
 		Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
 		
-		if(sender instanceof Player) {
-			player = (Player) sender;
-		}
 		player.sendMessage("Debug : " + player + server + split + onlinePlayers);
-		if (commandLabel.equals("aban")) {
-		//	if (split[0].equalsIgnoreCase("ban")) {
+			if (split[0].equalsIgnoreCase("aban")) {
 				if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) {
 					if (split.length >= 2) {
 						Player target = plugin.getServer().getPlayer(split[1]);
@@ -114,6 +98,7 @@ public class AGBSPlayerListener extends PlayerListener {
 					player.sendMessage("You don't have access to this command.");
 				}
 		//	}
+				/*
 			if (split[0].equalsIgnoreCase("banip")) {
 				if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) {
 					if (split.length >= 2) {
@@ -142,6 +127,7 @@ public class AGBSPlayerListener extends PlayerListener {
 					player.sendMessage("You don't have access to this command.");
 				}
 			}
+			*/
 			return true;
 		}
 		return true;
