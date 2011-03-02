@@ -104,20 +104,17 @@ public class AGBS extends JavaPlugin {
 		if (message.contains("grf")) {
 			reason += " Griefing";
 		}
-		if (message.contains("rac")) {
-			reason += " Racism";
-		}
 		if (message.contains("hax")) {
 			reason += " Hacking";
 		}
 		if (message.contains("thf")) {
 			reason += " Theft";
 		}
-		if (message.contains("hmo")) {
-			reason += " Homophobic Comments";
+		if (message.contains("dis")) {
+			reason += " Discriminatory Comments";
 		}
-		if (message.contains("ina")) {
-			reason += " Inappropriate Comments";
+		if (message.contains("lan")) {
+			reason += " Foul Language (Cursing)";
 		}
 		if (message.contains("bld")) {
 			reason += " Inappropriate Buildings";
