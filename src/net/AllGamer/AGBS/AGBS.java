@@ -26,7 +26,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 public class AGBS extends JavaPlugin 
 {
 	private final Logger log = Logger.getLogger("Minecraft");
-	public static String logPrefix = "[AGBS] ";
+	public static String logPrefix = "[AGBS]";
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
 	//private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
@@ -75,7 +75,7 @@ public class AGBS extends JavaPlugin
 		configInit();
 		confSetup.setupConfigs();
 		registerListeners();
-		log.info(logPrefix + " Version " + this.getDescription().getVersion() + " Enabled!");
+		log.info(logPrefix + " version " + this.getDescription().getVersion() + " Enabled!");
 
 	}
 
@@ -181,7 +181,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has banned " + target.getDisplayName());
+						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
 						reason = "";
@@ -221,7 +221,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
+						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
 						reason = "";
@@ -258,7 +258,7 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has exempted " + target.getDisplayName());
+						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 						configExempt.setProperty("exempt", target);
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -275,7 +275,7 @@ public class AGBS extends JavaPlugin
 				} 
 				else 
 				{
-					player.sendMessage("Correct usage is /exempt [target]");
+					player.sendMessage("Correct usage is /aexempt [target]");
 				}
 			} 
 			else 
@@ -293,7 +293,7 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has exempted " + target.getDisplayName());
+						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 						configBan.removeProperty("banned." + target);
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -339,7 +339,7 @@ public class AGBS extends JavaPlugin
 				} 
 				else 
 				{
-					player.sendMessage("Correct usage is /check [target]");
+					player.sendMessage("Correct usage is /acheck [target]");
 				}
 			} 
 			else
