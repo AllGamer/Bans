@@ -114,7 +114,7 @@ public class AGBS extends JavaPlugin {
 			reason += " Discriminatory Comments";
 		}
 		if (message.contains("lan")) {
-			reason += " Foul Language (Curising)";
+			reason += " Foul Language (Cursing)";
 		}
 		if (message.contains("bld")) {
 			reason += " Inappropriate Buildings";
