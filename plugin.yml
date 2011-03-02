@@ -14,6 +14,6 @@ commands:
         usage: |
                /<command> [target] [reason flags]
     check:
-    	Description: Check a user against the AGBS API
-    	usage: |
-    		   /<command> [target]
+        Description: Check a user against the AGBS API
+        usage: |
+               /<command> [target]
