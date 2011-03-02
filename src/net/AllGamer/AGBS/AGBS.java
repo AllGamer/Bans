@@ -13,7 +13,6 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.*;
 
 // permissions 2.4 imports
 import com.nijiko.permissions.PermissionHandler;
@@ -27,22 +26,19 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 public class AGBS extends JavaPlugin 
 {
 	private final Logger log = Logger.getLogger("Minecraft");
-	public static String logPrefix = "[AGBS]";
+	public static String logPrefix = "[AGBS] ";
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
 	//private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
-	String message = "";
-	String reason = "";
-
-	// use latest permissions
-	public static PermissionHandler Permissions = null;
+	public String message = "";
+	public String reason = "";
 	public Configuration config;
 	public Configuration configExempt;
 	public Configuration configBan;
-
 	private AGBSConfiguration confSetup;
+	public static PermissionHandler Permissions = null;
 
-	// in case we need it more than once ;)
+	
 	public void configInit()
 	{
 		getDataFolder().mkdirs();
@@ -53,7 +49,7 @@ public class AGBS extends JavaPlugin
 
 	}
 	
-	// check to see if we have permissions, or fake permissions. Disable if we don't...
+
 	public void setupPermissions() 
 	{
 		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -296,7 +292,6 @@ public class AGBS extends JavaPlugin
 					if (arraySearch(onlinePlayers, target)) 
 					{
 						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has exempted " + target.getDisplayName());
-						//wtf!?!?!?
 						configBan.removeProperty("banned." + target);
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
