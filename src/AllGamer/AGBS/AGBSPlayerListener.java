@@ -12,7 +12,7 @@ import org.bukkit.Server;
  */
 public class AGBSPlayerListener extends PlayerListener {
 	private final AGBS plugin;
-	String message;
+	String message = "";
 	String reason = "";
 
 	public AGBSPlayerListener(AGBS instance) {
@@ -29,7 +29,7 @@ public class AGBSPlayerListener extends PlayerListener {
 		}
 		return message;
 	}
-	
+
 	public boolean arraySearch(Player[] list, Player target) {
 		for (Player p : list)
 			if (p.equals(target)) {
@@ -37,7 +37,7 @@ public class AGBSPlayerListener extends PlayerListener {
 			}
 		return false;
 	}
-	
+
 	public String makeReason(String message) {
 		if (message.contains("grf")) {
 			reason += " Griefing";
@@ -62,43 +62,45 @@ public class AGBSPlayerListener extends PlayerListener {
 		}
 		return reason;
 	}
-
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+	
+	public boolean onCommand(CommandSender sender, Command commandArg, String commandLabel, String[] args) {
+		System.out.println("Good");
 		Player player = (Player) sender;
 		Server server = plugin.getServer();
+		String command = commandArg.getName().toLowerCase();
 		String[] split = args;
 		Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
-		
-		player.sendMessage("Debug : " + player + server + split + onlinePlayers);
-			if (split[0].equalsIgnoreCase("aban")) {
-				if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) {
-					if (split.length >= 2) {
-						Player target = plugin.getServer().getPlayer(split[1]);
-						if (arraySearch(onlinePlayers, target)) {
-							message = make(split, 2);
-							message = message.toLowerCase();
-							reason = makeReason(message);
-							target.kickPlayer("Banned by " + player + ". Reason: " + reason);
-							reason = "";
-							server.broadcastMessage("§c[AGBS]" + sender + " has banned " + target);
-							// TODO: code for adding banned name to flatfile/sqlite/mysql here
-							
-							
-							
-							// TODO: code for sending ban info to the api
-							// TODO: Discuss: should this be done once to clean up code maybe with the syntax banPlayer( target, reason, apikey); ? 
-							
-						} else {
-							player.sendMessage("Cannot find the specified player! Check your spelling again.");
-						}
+
+		System.out.println("Debug : " + player + server + split + onlinePlayers);
+		if (command.equalsIgnoreCase("aban")) {
+			if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) {
+				if (split.length >= 2) {
+					Player target = plugin.getServer().getPlayer(split[1]);
+					if (arraySearch(onlinePlayers, target)) {
+						message = make(split, 1);
+						message = message.toLowerCase();
+						reason = makeReason(message);
+						target.kickPlayer("Banned by " + player + ". Reason: " + reason);
+						reason = "";
+						server.broadcastMessage("§c[AGBS]" + sender + " has banned " + target);
+						// TODO: code for adding banned name to flatfile/sqlite/mysql here
+
+
+
+						// TODO: code for sending ban info to the api
+						// TODO: Discuss: should this be done once to clean up code maybe with the syntax banPlayer( target, reason, apikey); ? 
+
 					} else {
-						player.sendMessage("Correct usage is /a ban [target] [reason]");
+						player.sendMessage("Cannot find the specified player! Check your spelling again.");
 					}
 				} else {
-					player.sendMessage("You don't have access to this command.");
+					player.sendMessage("Correct usage is /a ban [target] [reason]");
 				}
-		//	}
-				/*
+			} else {
+				player.sendMessage("You don't have access to this command.");
+			}
+			//	}
+			/*
 			if (split[0].equalsIgnoreCase("banip")) {
 				if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) {
 					if (split.length >= 2) {
@@ -111,12 +113,12 @@ public class AGBSPlayerListener extends PlayerListener {
 							reason = "";
 							server.broadcastMessage("§c[AGBS]" + sender + " has banned " + target);
 							// TODO: code for adding banned name to flatfile/sqlite/mysql here
-							
-							
-							
+
+
+
 							// TODO: code for sending ban info to the api
 							// Discuss: should this be done once to clean up code or every time we call it? 
-							
+
 						} else {
 							player.sendMessage("Cannot find the specified player! Check your spelling again.");
 						}
@@ -127,7 +129,7 @@ public class AGBSPlayerListener extends PlayerListener {
 					player.sendMessage("You don't have access to this command.");
 				}
 			}
-			*/
+			 */
 			return true;
 		}
 		return true;
