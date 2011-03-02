@@ -141,7 +141,7 @@ public class AGBS extends JavaPlugin {
 						message = message.toLowerCase();
 						reason = makeReason(message);
 						server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
-						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + (reason.equals("") ? " Unknown" : reason));
+						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -170,7 +170,7 @@ public class AGBS extends JavaPlugin {
 							message = message.toLowerCase();
 							reason = makeReason(message);
 							server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
-							target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + (reason.equals("") ? " Unknown" : reason));
+							target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 							reason = "";
 							// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
