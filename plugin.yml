@@ -1,10 +1,15 @@
-name: AGBS
+name:AGBS
 
-main: AllGamer.AGBS.AGBS
+main:AllGamer.AGBS.AGBS
 
-version: 0.1
+version:0.1
 
 commands:
     aban:
         description: Ban a user with AGBS
-        usage: /<command>
+        usage: |
+               /<command> [target] [reason flags]
+    abanip:
+        description: Ban a user's IP with AGBS
+        usage: |
+               /<command> [target] [reason flags]
