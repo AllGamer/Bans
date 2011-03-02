@@ -1,4 +1,4 @@
-package AllGamer.AGBS;
+package net.AllGamer.AGBS;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

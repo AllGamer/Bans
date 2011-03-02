@@ -1,4 +1,4 @@
-package AllGamer.AGBS;
+package net.AllGamer.AGBS;
 
 import java.io.BufferedWriter;
 import java.io.File;

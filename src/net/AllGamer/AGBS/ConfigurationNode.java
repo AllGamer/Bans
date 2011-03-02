@@ -1,4 +1,4 @@
-package AllGamer.AGBS;
+package net.AllGamer.AGBS;
 
 import java.util.ArrayList;
 import java.util.HashMap;

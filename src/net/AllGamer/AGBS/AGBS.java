@@ -1,4 +1,4 @@
-package AllGamer.AGBS;
+package net.AllGamer.AGBS;
 
 import java.io.*;
 import java.util.HashMap;
@@ -47,8 +47,8 @@ public class AGBS extends JavaPlugin
 	{
 		getDataFolder().mkdirs();
 		config = new Configuration(new File(this.getDataFolder(), "config.yml"));
-		configExempt = new Configuration(new File(this.getDataFolder(), "bans.yml"));
-		configBan = new Configuration(new File(this.getDataFolder(), "exempt.yml"));
+		configBan = new Configuration(new File(this.getDataFolder(), "bans.yml"));
+		configExempt = new Configuration(new File(this.getDataFolder(), "exempt.yml"));
 		confSetup = new AGBSConfiguration(this.getDataFolder(), this);
 
 	}
@@ -79,7 +79,7 @@ public class AGBS extends JavaPlugin
 		configInit();
 		confSetup.setupConfigs();
 		registerListeners();
-		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled!");
+		log.info(logPrefix + " Version " + this.getDescription().getVersion() + " Enabled!");
 		
 	}
 
@@ -185,6 +185,7 @@ public class AGBS extends JavaPlugin
 						reason = makeReason(message);
 						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
+						configBan.setProperty("banned", target);
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -224,6 +225,7 @@ public class AGBS extends JavaPlugin
 							reason = makeReason(message);
 							server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
 							target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
+							configBan.setProperty("banned", target);
 							reason = "";
 							// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -248,6 +250,77 @@ public class AGBS extends JavaPlugin
 					player.sendMessage("You don't have access to this command.");
 				}
 				return true;
+		}
+		if (command.equalsIgnoreCase("aexempt")) 
+		{
+			if (AGBS.Permissions.has(player, "agbs.exempt") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
+			{
+				if (split.length >= 2) 
+				{
+					Player target = getServer().getPlayer(split[0]);
+					if (arraySearch(onlinePlayers, target)) 
+					{
+						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has exempted " + target.getDisplayName());
+						configExempt.setProperty("exempt", target);
+						// TODO: code for adding banned name to flatfile/sqlite/mysql here
+
+
+
+						// TODO: code for sending ban info to the api
+						// TODO: Discuss: should this be done once to clean up code maybe with the syntax banPlayer( target, reason, apikey); ? 
+
+					} 
+					else 
+					{
+						player.sendMessage("Cannot find the specified player! Check your spelling again.");
+					}
+				} 
+				else 
+				{
+					player.sendMessage("Correct usage is /exempt [target]");
+				}
+			} 
+			else 
+			{
+				player.sendMessage("You don't have access to this command.");
+			}
+			return true;
+		}
+		if (command.equalsIgnoreCase("aunban")) 
+		{
+			if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
+			{
+				if (split.length >= 2) 
+				{
+					Player target = getServer().getPlayer(split[0]);
+					if (arraySearch(onlinePlayers, target)) 
+					{
+						server.broadcastMessage("§c" + AGBS.logPrefix + player.getDisplayName() + " has exempted " + target.getDisplayName());
+						//wtf!?!?!?
+						configBan.removeProperty("banned." + target);
+						// TODO: code for adding banned name to flatfile/sqlite/mysql here
+
+
+
+						// TODO: code for sending ban info to the api
+						// TODO: Discuss: should this be done once to clean up code maybe with the syntax unbanPlayer( target, apikey ); ? 
+
+					} 
+					else 
+					{
+						player.sendMessage("Cannot find the specified player! Check your spelling again.");
+					}
+				} 
+				else 
+				{
+					player.sendMessage("Correct usage is /unban [target]");
+				}
+			} 
+			else 
+			{
+				player.sendMessage("You don't have access to this command.");
+			}
+			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("check"))
 		{
@@ -279,5 +352,6 @@ public class AGBS extends JavaPlugin
 			return true;
 		}
 		return true;
+		
 	}
 }

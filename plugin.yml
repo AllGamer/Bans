@@ -1,5 +1,5 @@
 name: AGBS
-main: AllGamer.AGBS.AGBS
+main: net.AllGamer.AGBS.AGBS
 version: 0.1
 commands:
     aban:
@@ -12,5 +12,13 @@ commands:
                /<command> [target] [reason flags]
     check:
         description: check a user against the AGBS API
+        usage: |
+               /<command> [target]
+    unban:
+        description: unban a user locally and against the AGBS api
+        usage: |
+               /<command> [target]
+    exempt:
+        description: exempt a user from ban checks
         usage: |
                /<command> [target]
