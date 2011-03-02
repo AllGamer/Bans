@@ -13,3 +13,7 @@ commands:
         description: Ban a user's IP with AGBS
         usage: |
                /<command> [target] [reason flags]
+    check:
+    	Description: Check a user against the AGBS API
+    	usage: |
+    		   /<command> [target]
