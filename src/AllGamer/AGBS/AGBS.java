@@ -140,9 +140,9 @@ public class AGBS extends JavaPlugin {
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason: " + reason);
+						server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
+						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						reason = "";
-						server.broadcastMessage("§c[AGBS]" + player.getDisplayName() + " has banned " + target.getDisplayName());
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
 
@@ -166,12 +166,12 @@ public class AGBS extends JavaPlugin {
 					if (split.length >= 2) {
 						Player target = getServer().getPlayer(split[0]);	
 						if (arraySearch(onlinePlayers, target)) {
-							make(split, 2);
+							message = make(split, 1);
 							message = message.toLowerCase();
 							reason = makeReason(message);
-							target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason: " + reason);
+							server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
+							target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 							reason = "";
-							server.broadcastMessage("§c[AGBS]" + player.getDisplayName() + " has banned " + target.getDisplayName());
 							// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
 
