@@ -38,7 +38,7 @@ public class AGBS extends JavaPlugin
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
 
-	
+
 	public void configInit()
 	{
 		getDataFolder().mkdirs();
@@ -48,7 +48,7 @@ public class AGBS extends JavaPlugin
 		confSetup = new AGBSConfiguration(this.getDataFolder(), this);
 
 	}
-	
+
 
 	public void setupPermissions() 
 	{
@@ -76,7 +76,7 @@ public class AGBS extends JavaPlugin
 		confSetup.setupConfigs();
 		registerListeners();
 		log.info(logPrefix + " Version " + this.getDescription().getVersion() + " Enabled!");
-		
+
 	}
 
 	public void onDisable() 
@@ -88,7 +88,7 @@ public class AGBS extends JavaPlugin
 		// EXAMPLE: Custom code, here we just output some info so we can check all is well
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Disabled!");
 	}
-	
+
 	public boolean isDebugging(final Player player) 
 	{
 		if (debugees.containsKey(player)) 
@@ -101,12 +101,12 @@ public class AGBS extends JavaPlugin
 	{
 		debugees.put(player, value);
 	}
-	
+
 	public void registerListeners() 
 	{
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
 	}
-	
+
 	public String make(String[] split, int startingIndex) 
 	{
 		message = "";
@@ -123,10 +123,12 @@ public class AGBS extends JavaPlugin
 	public boolean arraySearch(Player[] list, Player target) 
 	{
 		for (Player p : list)
+		{
 			if (p.equals(target)) 
 			{
 				return true;
 			}
+		}
 		return false;
 	}
 
@@ -158,7 +160,7 @@ public class AGBS extends JavaPlugin
 		}
 		return reason;
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command commandArg, String commandLabel, String[] args) 
 	{
 		Player player = (Player) sender;
@@ -166,7 +168,7 @@ public class AGBS extends JavaPlugin
 		String command = commandArg.getName().toLowerCase();
 		String[] split = args;
 		Player[] onlinePlayers = getServer().getOnlinePlayers();
-		
+
 		if (command.equalsIgnoreCase("aban")) 
 		{
 			if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
@@ -209,43 +211,43 @@ public class AGBS extends JavaPlugin
 		}
 		if (commandLabel.equalsIgnoreCase("abanip")) 
 		{
-				if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) 
+			if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) 
+			{
+				if (split.length >= 2) 
 				{
-					if (split.length >= 2) 
+					Player target = getServer().getPlayer(split[0]);	
+					if (arraySearch(onlinePlayers, target)) 
 					{
-						Player target = getServer().getPlayer(split[0]);	
-						if (arraySearch(onlinePlayers, target)) 
-						{
-							message = make(split, 1);
-							message = message.toLowerCase();
-							reason = makeReason(message);
-							server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
-							target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-							configBan.setProperty("banned", target);
-							reason = "";
-							// TODO: code for adding banned name to flatfile/sqlite/mysql here
+						message = make(split, 1);
+						message = message.toLowerCase();
+						reason = makeReason(message);
+						server.broadcastMessage("§c[AGBS] " + player.getDisplayName() + " has banned " + target.getDisplayName());
+						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
+						configBan.setProperty("banned", target);
+						reason = "";
+						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
 
 
-							// TODO: code for sending ban info to the api
-							// Discuss: should this be done once to clean up code or every time we call it? 
+						// TODO: code for sending ban info to the api
+						// Discuss: should this be done once to clean up code or every time we call it? 
 
-						} 
-						else 
-						{
-							player.sendMessage("Cannot find the specified player! Check your spelling again.");
-						}
 					} 
 					else 
 					{
-						player.sendMessage("Correct usage is /abanip [target] [reason]");
+						player.sendMessage("Cannot find the specified player! Check your spelling again.");
 					}
 				} 
 				else 
 				{
-					player.sendMessage("You don't have access to this command.");
+					player.sendMessage("Correct usage is /abanip [target] [reason]");
 				}
-				return true;
+			} 
+			else 
+			{
+				player.sendMessage("You don't have access to this command.");
+			}
+			return true;
 		}
 		if (command.equalsIgnoreCase("aexempt")) 
 		{
@@ -317,7 +319,7 @@ public class AGBS extends JavaPlugin
 			}
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("check"))
+		if (commandLabel.equalsIgnoreCase("acheck"))
 		{
 			if (AGBS.Permissions.has(player, "agbs.check") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*"))
 			{
@@ -326,8 +328,8 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);	
 					if (arraySearch(onlinePlayers, target)) 
 					{
-					// TODO: code for checking target name against api here
-					
+						// TODO: code for checking target name against api here
+
 
 					}
 					else 
@@ -347,6 +349,6 @@ public class AGBS extends JavaPlugin
 			return true;
 		}
 		return true;
-		
+
 	}
 }
