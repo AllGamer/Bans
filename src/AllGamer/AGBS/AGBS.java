@@ -126,14 +126,12 @@ public class AGBS extends JavaPlugin {
 	}
 	
 	public boolean onCommand(CommandSender sender, Command commandArg, String commandLabel, String[] args) {
-		System.out.println("Good");
 		Player player = (Player) sender;
 		Server server = getServer();
 		String command = commandArg.getName().toLowerCase();
 		String[] split = args;
 		Player[] onlinePlayers = getServer().getOnlinePlayers();
-
-		System.out.println("Debug : " + player + server + split + onlinePlayers);
+		
 		if (command.equalsIgnoreCase("aban")) {
 			if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) {
 				if (split.length >= 2) {
@@ -142,9 +140,9 @@ public class AGBS extends JavaPlugin {
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						target.kickPlayer("Banned by " + player.getName() + ". Reason: " + reason);
+						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason: " + reason);
 						reason = "";
-						server.broadcastMessage("§c[AGBS]" + player.getName() + " has banned " + target.getName());
+						server.broadcastMessage("§c[AGBS]" + player.getDisplayName() + " has banned " + target.getDisplayName());
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
 
@@ -161,7 +159,6 @@ public class AGBS extends JavaPlugin {
 			} else {
 				player.sendMessage("You don't have access to this command.");
 			}
-			//	}
 			return true;
 		}
 		if (commandLabel.equalsIgnoreCase("abanip")) {
@@ -172,9 +169,9 @@ public class AGBS extends JavaPlugin {
 							make(split, 2);
 							message = message.toLowerCase();
 							reason = makeReason(message);
-							target.kickPlayer("Banned by " + player.getName() + ". Reason: " + reason);
+							target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason: " + reason);
 							reason = "";
-							server.broadcastMessage("§c[AGBS]" + player.getName() + " has banned " + target.getName());
+							server.broadcastMessage("§c[AGBS]" + player.getDisplayName() + " has banned " + target.getDisplayName());
 							// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
 
