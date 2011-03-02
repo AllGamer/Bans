@@ -10,15 +10,15 @@ commands:
         description: Ban a user's IP with AGBS
         usage: |
                /<command> [target] [reason flags]
-    check:
+    acheck:
         description: Check a user against the AGBS API
         usage: |
                /<command> [target]
-    unban:
+    aunban:
         description: Unban a user locally and against the AGBS API
         usage: |
                /<command> [target]
-    exempt:
+    aexempt:
         description: Exempt a user from ban checks
         usage: |
                /<command> [target]
