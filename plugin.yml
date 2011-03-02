@@ -11,14 +11,14 @@ commands:
         usage: |
                /<command> [target] [reason flags]
     check:
-        description: check a user against the AGBS API
+        description: Check a user against the AGBS API
         usage: |
                /<command> [target]
     unban:
-        description: unban a user locally and against the AGBS api
+        description: Unban a user locally and against the AGBS API
         usage: |
                /<command> [target]
     exempt:
-        description: exempt a user from ban checks
+        description: Exempt a user from ban checks
         usage: |
                /<command> [target]
