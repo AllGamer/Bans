@@ -81,13 +81,12 @@ public class AGBSPlayerListener extends PlayerListener {
 		String[] split = args;
 		Player[] onlinePlayers = plugin.getServer().getOnlinePlayers();
 		
-
 		if(sender instanceof Player) {
 			player = (Player) sender;
 		}
 		player.sendMessage("Debug : " + player + server + split + onlinePlayers);
-		if (commandLabel.equals("a")) {
-			if (split[0].equalsIgnoreCase("ban")) {
+		if (commandLabel.equals("aban")) {
+		//	if (split[0].equalsIgnoreCase("ban")) {
 				if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) {
 					if (split.length >= 2) {
 						Player target = plugin.getServer().getPlayer(split[1]);
@@ -114,7 +113,7 @@ public class AGBSPlayerListener extends PlayerListener {
 				} else {
 					player.sendMessage("You don't have access to this command.");
 				}
-			}
+		//	}
 			if (split[0].equalsIgnoreCase("banip")) {
 				if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) {
 					if (split.length >= 2) {
