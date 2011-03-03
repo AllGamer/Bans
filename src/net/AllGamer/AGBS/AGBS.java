@@ -13,6 +13,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
 // permissions 2.4 imports
 import com.nijiko.permissions.PermissionHandler;
@@ -30,14 +31,14 @@ public class AGBS extends JavaPlugin
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
 	//private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
-	public String message = "";
-	public String reason = "";
-	public Configuration config;
-	public Configuration configExempt;
-	public Configuration configBan;
+	public static String message = "";
+	public static String reason = "";
+	public static Configuration config;
+	public static Configuration configExempt;
+	public static Configuration configBan;
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
-
+	int count = 0;
 
 	public void configInit()
 	{
@@ -75,8 +76,7 @@ public class AGBS extends JavaPlugin
 		configInit();
 		confSetup.setupConfigs();
 		registerListeners();
-		log.info(logPrefix + " version " + this.getDescription().getVersion() + " Enabled!");
-
+		log.info(logPrefix + " - version " + this.getDescription().getVersion() + " enabled!");
 	}
 
 	public void onDisable() 
@@ -86,7 +86,7 @@ public class AGBS extends JavaPlugin
 		// NOTE: All registered events are automatically unregistered when a plugin is disabled
 
 		// EXAMPLE: Custom code, here we just output some info so we can check all is well
-		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Disabled!");
+		log.info(logPrefix + " - version " + this.getDescription().getVersion() + " disabled!");
 	}
 
 	public boolean isDebugging(final Player player) 
@@ -105,9 +105,11 @@ public class AGBS extends JavaPlugin
 	public void registerListeners() 
 	{
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+
 	}
 
-	public String make(String[] split, int startingIndex) 
+	public static String make(String[] split, int startingIndex) 
 	{
 		message = "";
 		for (; startingIndex < split.length; startingIndex++) 
@@ -186,9 +188,9 @@ public class AGBS extends JavaPlugin
 						configBan.setProperty("banned", target);
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
-
-
-
+						AGBS.configBan.load();
+							AGBS.configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+						AGBS.configBan.save();
 						// TODO: code for sending ban info to the api
 						// TODO: Discuss: should this be done once to clean up code maybe with the syntax banPlayer( target, reason, apikey); ? 
 
