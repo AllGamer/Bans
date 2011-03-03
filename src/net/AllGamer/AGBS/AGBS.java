@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -88,7 +89,7 @@ public class AGBS extends JavaPlugin
 			} 
 			catch (Exception e) 
 			{
-				log.severe(logPrefix + "an error has occured while obtaining the subscriptions");
+				log.severe(logPrefix + " An error has occured while obtaining the subscriptions");
 				log.severe(logPrefix + " " + e);
 			}
 		}
@@ -239,7 +240,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
+						server.broadcastMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
 						reason = "";
@@ -279,8 +280,8 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
-						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
+						server.broadcastMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
+						target.kickPlayer("IPBanned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
@@ -304,7 +305,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -317,7 +318,7 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+						server.broadcastMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 						configExempt.setProperty("exempt", target);
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -355,7 +356,7 @@ public class AGBS extends JavaPlugin
 					{
 						for (Player p: onlinePlayers) { 
 							if (AGBS.Permissions.has(p, "agbs.notify.*") || AGBS.Permissions.has(p, "agbs.*") || AGBS.Permissions.has(p, "*") || AGBS.Permissions.has(p, "agbs.notify.exempt")) {
-								p.sendMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+								p.sendMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 							}
 						}
 						configBan.removeProperty("banned." + target);
