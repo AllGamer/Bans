@@ -1,7 +1,10 @@
 package net.AllGamer.AGBS;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Server;
@@ -14,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
+
 
 // permissions 2.4 imports
 import com.nijiko.permissions.PermissionHandler;
@@ -52,14 +56,46 @@ public class AGBS extends JavaPlugin
 
 	}
 
-	public void getSubscription()
+	public void getSubscriptions()
 	{
 		config.load();
-		config.getStringList("subscriptions", null);
-		/*
-		 * code for api call should go here. (once we know how the api will work)
-		 */
+		Object apikey = config.getProperty("apikey");
+		List<String> subscriptions = config.getStringList("subscriptions", null);
 		
+		    for (String s : subscriptions)
+		    {
+		    	try
+		    	{
+		        // Construct data
+		        String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode(s, "UTF-8");
+		        data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode((String) apikey, "UTF-8");
+
+		        // Send data
+		        URL url = new URL("http://hostname:80/api");
+		        java.net.URLConnection conn = url.openConnection();
+		        conn.setDoOutput(true);
+		        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+		        wr.write(data);
+		        wr.flush();
+
+		        // Get the response
+		        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		        String line;
+		        while ((line = rd.readLine()) != null) 
+		        {
+		            // what to do, what to do, what to do...
+		        	}
+		        wr.close();
+		        rd.close();
+		    	} 
+		    	catch (Exception e) 
+		    	{
+		    		log.severe(logPrefix + "an error has occured while obtaining the subscriptions");
+		    		log.severe(logPrefix + " " + e);
+		    	}
+		    }
+		
+		    //TODO: discuss below
 		/**
 		 * we should look at how well the api/db can handle jeff's 10 servers sharing a MYS subscription. MYS would be
 		 * MY Servers which would hold any bans on users that don't break the rules, but are unwanted users none-the-less
@@ -70,8 +106,8 @@ public class AGBS extends JavaPlugin
 		 * thoughts? maybe discuss this on TS3...
 		 */
 		
-	}
 	
+	}
 	public void setupPermissions() 
 	{
 		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -82,10 +118,11 @@ public class AGBS extends JavaPlugin
 			if (agbs != null) {
 				this.getServer().getPluginManager().enablePlugin(agbs);
 				AGBS.Permissions = ((Permissions) agbs).getHandler();
+				log.info(logPrefix + " version " + pdfFile.getVersion() + " Permissions detected...");
 			}
 			else 
 			{
-				System.out.println(pdfFile.getName() + " version " + pdfFile.getVersion() + " not enabled. Permissions not detected");
+				log.severe(logPrefix + " version " + pdfFile.getVersion() + " not enabled. Permissions not detected");
 				this.getServer().getPluginManager().disablePlugin(this);
 			}
 		}
@@ -97,7 +134,7 @@ public class AGBS extends JavaPlugin
 		configInit();
 		confSetup.setupConfigs();
 		registerListeners();
-		log.info(logPrefix + " - version " + this.getDescription().getVersion() + " enabled!");
+		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
 	}
 
 	public void onDisable() 
@@ -107,7 +144,7 @@ public class AGBS extends JavaPlugin
 		// NOTE: All registered events are automatically unregistered when a plugin is disabled
 
 		// EXAMPLE: Custom code, here we just output some info so we can check all is well
-		log.info(logPrefix + " - version " + this.getDescription().getVersion() + " disabled!");
+		log.info(logPrefix + " version " + this.getDescription().getVersion() + " disabled!");
 	}
 
 	public boolean isDebugging(final Player player) 
@@ -228,6 +265,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
 			}
 			return true;
 		}
@@ -268,6 +306,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
 			}
 			return true;
 		}
@@ -303,6 +342,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
 			}
 			return true;
 		}
@@ -338,6 +378,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
 			}
 			return true;
 		}
@@ -367,6 +408,7 @@ public class AGBS extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
 			}
 			return true;
 		}
