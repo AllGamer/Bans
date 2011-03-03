@@ -33,7 +33,6 @@ public class AGBS extends JavaPlugin
 	private final Logger log = Logger.getLogger("Minecraft");
 	public static String logPrefix = "[AGBS]";
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
-	//private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 	public static String message = "";
 	public static String reason = "";
@@ -43,7 +42,6 @@ public class AGBS extends JavaPlugin
 	public static Configuration configBanIP;
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
-	int count = 0;
 
 	public void configInit()
 	{
@@ -372,13 +370,13 @@ public class AGBS extends JavaPlugin
 				} 
 				else 
 				{
-					player.sendMessage("Correct usage is /unban [target]");
+					player.sendMessage("Correct usage is /aunban [target]");
 				}
 			} 
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
