@@ -45,11 +45,33 @@ public class AGBSConfiguration
 				out.write("mysqldb: jdbc:mysql://localhost:3306/minecraft\n");
 				out.write("mysqluser: root\n");
 				out.write("mysqlpass: root\n");
+				out.write("mysqlport: 3306\n");
+				out.write("\n");
 				out.write("#Use sqlite?\n");
 				out.write("sqlite: false\n");
 				out.write("\n");
 				out.write("#Use flatfiles? (default)\n");
 				out.write("flatfiles: true\n");
+				out.write("\n");
+				out.write("\n");
+				out.write("subscriptions:\n");
+				out.write("#These will all be commented out by default...uncomment the ones you want...\n");
+				out.write("\n");
+				out.write("#Prevent known hackers\n");
+				out.write("#    - hax\n");
+				out.write("#Prevent known griefers\n");
+				out.write("#    - grf\n");
+				out.write("#Prevent known theives\n");
+				out.write("#    - thf\n");
+				out.write("#Prevent people known for making Discriminatory Comments\n");
+				out.write("#    - dis\n");
+				out.write("#Prevent people known for using foul language\n");
+				out.write("#    - lan\n");
+				out.write("#Prevent people known for making inappropriate buildings\n");
+				out.write("#    - bld\n");
+				out.write("#Bans issued by my server for unwanted players\n");
+				out.write("#   - mys\n");
+				
 				
 				out.close();
 				fstream.close();
@@ -87,6 +109,31 @@ public class AGBSConfiguration
 						.disablePlugin((Plugin) this);
 				}	
 			}
+		File bannedIP = new File(this.folder, "banIP.yml");
+		if (!bannedIP.exists()) 
+			{
+			try {
+				log.info(logPrefix + " - Creating ban file... ");
+				banned.createNewFile();
+				FileWriter fstream = new FileWriter(banned);
+				BufferedWriter out = new BufferedWriter(fstream);
+
+				out.write("#AGBS local banned IP file\n");
+				out.write("banned:\n");
+				out.write("    - 69.69.69.69\n");
+				
+				out.close();
+				fstream.close();
+				
+				}
+			catch (IOException ex) 
+				{
+				log.info(logPrefix
+						+ "Error creating ban File");
+				this.plugin.getServer().getPluginManager()
+						.disablePlugin((Plugin) this);
+				}	
+			}
 		File exempt = new File(this.folder, "exempt.yml");
 		if (!exempt.exists()) 
 			{
@@ -99,7 +146,7 @@ public class AGBSConfiguration
 				out.write("#AGBS local exempt user file\n");
 				out.write("#Server owners, add yourself to this file!\n");
 				out.write("exempt:\n");
-				out.write("    - aetaric\n");
+				out.write("    - serverstaff\n");
 				out.close();
 				fstream.close();
 				

@@ -36,6 +36,7 @@ public class AGBS extends JavaPlugin
 	public static Configuration config;
 	public static Configuration configExempt;
 	public static Configuration configBan;
+	public static Configuration configBanIP;
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
 	int count = 0;
@@ -46,11 +47,31 @@ public class AGBS extends JavaPlugin
 		config = new Configuration(new File(this.getDataFolder(), "config.yml"));
 		configBan = new Configuration(new File(this.getDataFolder(), "bans.yml"));
 		configExempt = new Configuration(new File(this.getDataFolder(), "exempt.yml"));
+		configBanIP = new Configuration(new File(this.getDataFolder(), "banIP.yml"));
 		confSetup = new AGBSConfiguration(this.getDataFolder(), this);
 
 	}
 
-
+	public void getSubscription()
+	{
+		config.load();
+		config.getStringList("subscriptions", null);
+		/*
+		 * code for api call should go here. (once we know how the api will work)
+		 */
+		
+		/**
+		 * we should look at how well the api/db can handle jeff's 10 servers sharing a MYS subscription. MYS would be
+		 * MY Servers which would hold any bans on users that don't break the rules, but are unwanted users none-the-less
+		 * think about a really annoying version of tyler for this. he doesn't break the rules. but you don't want him on 
+		 * your servers... this would be based on jeff's api key ONLY. other server's can't use this subscription as they
+		 * would have their own MYS list. sql query? maybe on a pivot table? SELECT * IN bans WHERE apikey = 'apikeyhere' AND ban_type = 'MYS';
+		 * 
+		 * thoughts? maybe discuss this on TS3...
+		 */
+		
+	}
+	
 	public void setupPermissions() 
 	{
 		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -191,8 +212,7 @@ public class AGBS extends JavaPlugin
 						AGBS.configBan.load();
 							AGBS.configBan.setProperty("banned", target.getDisplayName().toLowerCase());
 						AGBS.configBan.save();
-						// TODO: code for sending ban info to the api
-						// TODO: Discuss: should this be done once to clean up code maybe with the syntax banPlayer( target, reason, apikey); ? 
+						// TODO: code for sending ban info to the api 
 
 					} 
 					else 
