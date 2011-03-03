@@ -20,7 +20,7 @@ public class AGBSConfiguration
 	{
 		this.folder = folder;
 		this.plugin = instance;
-		this.logPrefix = instance.logPrefix;
+		this.logPrefix = AGBS.logPrefix;
 	}
 
 	public void setupConfigs() 
@@ -29,26 +29,26 @@ public class AGBSConfiguration
 		if (!config.exists()) 
 		{
 			try {
-				log.info(logPrefix + "- Creating config directory... ");
-				log.info(logPrefix + "- Creating config files... ");
+				log.info(logPrefix + " - Creating config directory... ");
+				log.info(logPrefix + " - Creating config files... ");
 				config.createNewFile();
 				FileWriter fstream = new FileWriter(config);
 				BufferedWriter out = new BufferedWriter(fstream);
 
-				out.write("#AGBS configuration");
+				out.write("#AGBS Configuration");
 				out.write("");
 				out.write("\n");
-				out.write("#only select one datasource any more could cause problems... you have been warned...");
+				out.write("#Only select one datasource, any more could cause problems... You have been warned!\n");
 				out.write("#Use mysql?\n");
 				out.write("mysql: false\n");
 				out.write("");
 				out.write("mysqldb: jdbc:mysql://localhost:3306/minecraft\n");
 				out.write("mysqluser: root\n");
 				out.write("mysqlpass: root\n");
-				out.write("#use sqlite\n");
+				out.write("#Use sqlite?\n");
 				out.write("sqlite: false\n");
 				out.write("\n");
-				out.write("#use flatfiles (default)\n");
+				out.write("#Use flatfiles? (default)\n");
 				out.write("flatfiles: true\n");
 				
 				out.close();
@@ -62,11 +62,11 @@ public class AGBSConfiguration
 				this.plugin.getServer().getPluginManager()
 						.disablePlugin((Plugin) this);
 			}
-		File banned = new File(this.folder, "banned.yml");
+		File banned = new File(this.folder, "bans.yml");
 		if (!banned.exists()) 
 			{
 			try {
-				log.info(logPrefix + "- Creating ban file... ");
+				log.info(logPrefix + " - Creating ban file... ");
 				banned.createNewFile();
 				FileWriter fstream = new FileWriter(banned);
 				BufferedWriter out = new BufferedWriter(fstream);
@@ -91,13 +91,13 @@ public class AGBSConfiguration
 		if (!exempt.exists()) 
 			{
 			try {
-				log.info(logPrefix + "- Creating exempt file... ");
+				log.info(logPrefix + " - Creating exempt file... ");
 				exempt.createNewFile();
 				FileWriter fstream = new FileWriter(exempt);
 				BufferedWriter out = new BufferedWriter(fstream);
 
 				out.write("#AGBS local exempt user file\n");
-				out.write("#server owners, add yourself to this file!\n");
+				out.write("#Server owners, add yourself to this file!\n");
 				out.write("exempt:\n");
 				out.write("    - aetaric\n");
 				out.close();
