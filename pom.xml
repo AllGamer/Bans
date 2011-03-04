@@ -7,8 +7,11 @@
   <version>0.1-SNAPSHOT</version>
   <description>ban system bukkit plugin</description>
   <build>
-    <sourceDirectory>src</sourceDirectory>
-    <testSourceDirectory>bin</testSourceDirectory>
+    <sourceDirectory>/home/aetaric/AGBS/src</sourceDirectory>
+    <testSourceDirectory>/home/aetaric/AGBS/src</testSourceDirectory>
+    <defaultGoal></defaultGoal>
+    <directory>/home/aetaric/AGBS</directory>
+    <finalName>AGBS-0.1-SNAPSHOT</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

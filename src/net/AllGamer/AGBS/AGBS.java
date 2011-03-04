@@ -231,7 +231,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
+						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
 						reason = "";
@@ -271,7 +271,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
+						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
 						reason = "";
@@ -309,7 +309,7 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 						configExempt.setProperty("exempt", target);
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -345,7 +345,7 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 						configBan.removeProperty("banned." + target);
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
