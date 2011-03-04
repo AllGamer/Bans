@@ -242,14 +242,13 @@ public class AGBS extends JavaPlugin
 						reason = makeReason(message);
 						server.broadcastMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-						configBan.setProperty("banned", target);
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 						AGBS.configBan.load();
 						AGBS.configBan.setProperty("banned", target.getDisplayName().toLowerCase());
 						AGBS.configBan.save();
 						// TODO: code for sending ban info to the api 
-
+						
 					} 
 					else 
 					{
@@ -341,7 +340,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
