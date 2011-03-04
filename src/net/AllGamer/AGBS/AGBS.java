@@ -43,7 +43,6 @@ public class AGBS extends JavaPlugin
 	public static Configuration configBanIP;
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
-	int count = 0;
 
 	public void configInit()
 	{
