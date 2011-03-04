@@ -60,42 +60,42 @@ public class AGBS extends JavaPlugin
 		config.load();
 		Object apikey = config.getProperty("apikey");
 		List<String> subscriptions = config.getStringList("subscriptions", null);
-		
-		    for (String s : subscriptions)
-		    {
-		    	try
-		    	{
-		        // Construct data
-		        String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode(s, "UTF-8");
-		        data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode((String) apikey, "UTF-8");
 
-		        // Send data
-		        URL url = new URL("http://hostname:80/api");
-		        java.net.URLConnection conn = url.openConnection();
-		        conn.setDoOutput(true);
-		        OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-		        wr.write(data);
-		        wr.flush();
+		for (String s : subscriptions)
+		{
+			try
+			{
+				// Construct data
+				String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode(s, "UTF-8");
+				data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode((String) apikey, "UTF-8");
 
-		        // Get the response
-		        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-		        String line;
-		        while ((line = rd.readLine()) != null) 
-		        {
-		            // what to do, what to do, what to do...
-		        	}
-		        wr.close();
-		        rd.close();
-		    	} 
-		    	catch (Exception e) 
-		    	{
-		    		log.severe(logPrefix + "an error has occured while obtaining the subscriptions");
-		    		log.severe(logPrefix + " " + e);
-		    	}
-		    }
-	
-		
-	
+				// Send data
+				URL url = new URL("http://hostname:80/api");
+				java.net.URLConnection conn = url.openConnection();
+				conn.setDoOutput(true);
+				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+				wr.write(data);
+				wr.flush();
+
+				// Get the response
+				BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				String line;
+				while ((line = rd.readLine()) != null) 
+				{
+					// what to do, what to do, what to do...
+				}
+				wr.close();
+				rd.close();
+			} 
+			catch (Exception e) 
+			{
+				log.severe(logPrefix + " An error has occured while obtaining the subscriptions");
+				log.severe(logPrefix + " " + e);
+			}
+		}
+
+
+
 	}
 	public void setupPermissions() 
 	{
@@ -236,7 +236,7 @@ public class AGBS extends JavaPlugin
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 						AGBS.configBan.load();
-							AGBS.configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+						AGBS.configBan.setProperty("banned", target.getDisplayName().toLowerCase());
 						AGBS.configBan.save();
 						// TODO: code for sending ban info to the api 
 
@@ -254,7 +254,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -295,7 +295,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -308,7 +308,11 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+						for (Player p: onlinePlayers) { 
+							if (AGBS.Permissions.has(p, "agbs.notify.*") || AGBS.Permissions.has(p, "agbs.*") || AGBS.Permissions.has(p, "*") || AGBS.Permissions.has(p, "agbs.notify.exempt")) {
+								p.sendMessage("§c" + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+							}
+						}
 						configExempt.setProperty("exempt", target);
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -331,7 +335,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! denied access." );
+				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
