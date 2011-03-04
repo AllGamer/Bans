@@ -9,7 +9,7 @@
   <build>
     <sourceDirectory>/home/aetaric/AGBS/src</sourceDirectory>
     <testSourceDirectory>/home/aetaric/AGBS/src</testSourceDirectory>
-    <defaultGoal></defaultGoal>
+    <defaultGoal>package</defaultGoal>
     <directory>/home/aetaric/AGBS</directory>
     <finalName>AGBS-0.1-SNAPSHOT</finalName>
     <plugins>
