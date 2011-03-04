@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.AllGamer.AGBS</groupId>
+  <artifactId>agbs</artifactId>
+  <packaging>jar</packaging>
+  <name>ban system bukkit plugin</name>
+  <version>0.1-SNAPSHOT</version>
+  <description>ban system bukkit plugin</description>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>bin</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>snakeyaml-1.8</groupId>
+      <artifactId>snakeyaml-1.8</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>permissions</groupId>
+      <artifactId>Permissions</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>sqlite</groupId>
+      <artifactId>sqlite</artifactId>
+      <version>1.0</version>
+    </dependency>
+  </dependencies>
+</project>
