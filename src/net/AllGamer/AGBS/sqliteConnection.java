@@ -42,7 +42,7 @@ public class sqliteConnection
     private final static String EXEMPT_TABLE = "CREATE TABLE `exempt` "
                                                        + "("
                                                        + "`id`         INT PRIMARY KEY, "
-                                                       + "'trap_id'    INT NOT NULL DEFAULT '0', "
+                                                       + "`name`     	VARCHAR(32) NOT NULL DEFAULT 'Player', "
                                                        + ")";
 
     public void initialize() 
@@ -52,7 +52,7 @@ public class sqliteConnection
 
         Boolean success = true;
 
-        if (!tableExists("trap")) 
+        if (!tableExists("player_bans")) 
         {
             log.info(AGBS.logPrefix + " 'player_bans' table doesn't exist, creating...");
             if (!createTable(PLAYER_TABLE)) 
@@ -61,7 +61,7 @@ public class sqliteConnection
             }
         }
 
-        if (!tableExists("trap_blocks")) 
+        if (!tableExists("ip_bans")) 
         {
             log.info(AGBS.logPrefix + " 'ip_bans' table doesn't exist, creating...");
             if (!createTable(IP_TABLE)) 
@@ -70,7 +70,7 @@ public class sqliteConnection
             }
         }
 
-        if (!tableExists("trap_triggers")) 
+        if (!tableExists("exempt")) 
         {
             log.info(AGBS.logPrefix + " 'exempt' table doesn't exist, creating now.");
             if (!createTable(EXEMPT_TABLE)) 
