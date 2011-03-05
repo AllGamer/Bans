@@ -31,7 +31,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  */
 public class AGBS extends JavaPlugin 
 {
-	private final Logger log = Logger.getLogger("Minecraft");
+	public final static Logger log = Logger.getLogger("Minecraft");
 	public static String logPrefix = "[AGBS]";
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
 	//private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
