@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.Plugin;
@@ -121,9 +122,8 @@ public class AGBSConfiguration
 					{
 						log.info(logPrefix + " - Creating IP ban file... ");
 						banned.createNewFile();
-						FileWriter fstream = new FileWriter(banned);
+						FileWriter fstream = new FileWriter(bannedIP);
 						BufferedWriter out = new BufferedWriter(fstream);
-
 						out.write("#AGBS local banned IP file\n");
 						out.write("banned:\n");
 						out.write("    - 69.69.69.69\n");
