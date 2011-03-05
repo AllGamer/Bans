@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -252,7 +253,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -270,7 +271,7 @@ public class AGBS extends JavaPlugin
 						reason = makeReason(message);
 						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-						configBan.setProperty("banned", target);
+						configBan.setProperty("banned", target.getDisplayName().toLowerCase());
 						reason = "";
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -293,7 +294,7 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -306,8 +307,13 @@ public class AGBS extends JavaPlugin
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
+						for (Player p: onlinePlayers) { 
+							if (AGBS.Permissions.has(p, "agbs.notify.*") || AGBS.Permissions.has(p, "agbs.*") || AGBS.Permissions.has(p, "*") || AGBS.Permissions.has(p, "agbs.notify.exempt")) {
+								p.sendMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+							}
+						}
 						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
-						configExempt.setProperty("exempt", target);
+						configExempt.setProperty("exempt", target.getDisplayName().toLowerCase());
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
 
@@ -329,21 +335,21 @@ public class AGBS extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
 		if (command.equalsIgnoreCase("aunban")) 
 		{
-			if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
+			if (AGBS.Permissions.has(player, "agbs.unban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
 			{
 				if (split.length >= 2) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
-						configBan.removeProperty("banned." + target);
+						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has unbanned " + target.getDisplayName() + ".");
+						configBan.removeProperty("banned." + target.getDisplayName().toLowerCase());
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
 
@@ -359,13 +365,13 @@ public class AGBS extends JavaPlugin
 				} 
 				else 
 				{
-					player.sendMessage("Correct usage is /unban [target]");
+					player.sendMessage("Correct usage is /aunban [target]");
 				}
 			} 
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -395,7 +401,7 @@ public class AGBS extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
 			}
 			return true;
 		}
