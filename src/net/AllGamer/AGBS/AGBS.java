@@ -61,26 +61,30 @@ public class AGBS extends JavaPlugin
 
 	}
 
-	public void getSubscriptions()
+	public static String getAPIKEY()
 	{
 		config.load();
 		Object apikey = config.getProperty("apikey");
-		
+		return (String)apikey;
+	}
 	
+	public void getSubscriptions()
+	{
+		String key = getAPIKEY();
 		List<ConfigurationNode> sub = null;
 		List<ConfigurationNode> subs = config.getNodeList("subscriptions", sub );
 
-		for (ConfigurationNode s : subs)
+		for (ConfigurationNode s : sub)
 		{
 			try
 			{
-				// Construct data
+				
 				String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
-				data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode((String) apikey, "UTF-8");
+				data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 				
 				
 				// Send data
-				URL url = new URL("http://209.236.124.35/api/api.json");
+				URL url = new URL("http://209.236.124.35/api/subscribe.json");
 				java.net.URLConnection conn = url.openConnection();
 				conn.setDoOutput(true);
 				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -135,6 +139,7 @@ public class AGBS extends JavaPlugin
 		confSetup.setupConfigs();
 		getSubscriptions();
 		registerListeners();
+		config.load();
 		t.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
 		
@@ -145,6 +150,7 @@ public class AGBS extends JavaPlugin
 		// NOTE: All registered events are automatically unregistered when a plugin is disabled
 
 		// EXAMPLE: Custom code, here we just output some info so we can check all is well
+		t.interrupt();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " disabled!");
 	}
 
