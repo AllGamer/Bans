@@ -22,3 +22,7 @@ commands:
         description: Exempt a user from ban checks
         usage: |
                /<command> [target]
+    aunbanip:
+        description: Unban a user's IP address
+        usage: |
+               /<command> [target]
