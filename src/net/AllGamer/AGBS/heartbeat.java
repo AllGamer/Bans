@@ -28,7 +28,6 @@ public class heartbeat extends Thread
 			String data = URLEncoder.encode("playerlist", "UTF-8") + "=" + URLEncoder.encode("aetaric", "UTF-8");
 			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 			
-			
 			// Send data
 			URL url = new URL("http://209.236.124.35/api/heartbeat.json");
 			java.net.URLConnection conn = url.openConnection();
@@ -61,12 +60,9 @@ public class heartbeat extends Thread
 			} 
 			catch (Exception e) 
 			{
-				AGBS.log.severe(AGBS.logPrefix + " An error has occured while trying to heartbeat");
-				AGBS.log.severe(AGBS.logPrefix + " " + e);
 				try {
 					Thread.sleep(300000);
 				} catch (InterruptedException e1) {
-					AGBS.log.severe(AGBS.logPrefix + " Something stupid happened while trying to sleep the thread...");
 				}
 			}
 		}
