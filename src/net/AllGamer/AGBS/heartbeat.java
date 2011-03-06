@@ -4,18 +4,9 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.bukkit.util.config.Configuration;
-
 
 public class heartbeat extends Thread 
 {
-	public static Configuration config;
-	{
-	}
-	public void configInit()
-	{
-		config = new Configuration(new File("./plugins/AGBS", "config.yml"));
-	}
 	public void run()
 	{
 		int count = 0;
@@ -60,9 +51,12 @@ public class heartbeat extends Thread
 			} 
 			catch (Exception e) 
 			{
-				try {
+				try 
+				{
 					Thread.sleep(300000);
-				} catch (InterruptedException e1) {
+				}
+				catch (InterruptedException e1) 
+				{
 				}
 			}
 		}

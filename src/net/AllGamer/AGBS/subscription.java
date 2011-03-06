@@ -9,7 +9,8 @@ import java.util.List;
 
 import org.bukkit.util.config.ConfigurationNode;
 
-public class subscription extends Thread {
+public class subscription extends Thread 
+{
 
 	String key = AGBS.getAPIKEY();
 	List<ConfigurationNode> sub = null;
@@ -54,10 +55,12 @@ public class subscription extends Thread {
 				{
 					AGBS.log.severe(AGBS.logPrefix + " An error has occured while obtaining the subscriptions");
 					AGBS.log.severe(AGBS.logPrefix + " " + e);
-					try {
+					try 
+					{
 						Thread.sleep(900000);
-					} catch (InterruptedException e1) {
-
+					} 
+					catch (InterruptedException e1) 
+					{
 					}
 				}
 			}
