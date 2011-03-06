@@ -18,6 +18,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
+import org.bukkit.util.config.ConfigurationNode;
 
 
 // permissions 2.4 imports
@@ -45,6 +46,9 @@ public class AGBS extends JavaPlugin
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
 	int count = 0;
+	
+	heartbeat hb = new heartbeat();
+	Thread t = new Thread( hb );
 
 	public void configInit()
 	{
@@ -61,18 +65,22 @@ public class AGBS extends JavaPlugin
 	{
 		config.load();
 		Object apikey = config.getProperty("apikey");
-		List<String> subscriptions = config.getStringList("subscriptions", null);
+		
+	
+		List<ConfigurationNode> sub = null;
+		List<ConfigurationNode> subs = config.getNodeList("subscriptions", sub );
 
-		for (String s : subscriptions)
+		for (ConfigurationNode s : subs)
 		{
 			try
 			{
 				// Construct data
-				String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode(s, "UTF-8");
+				String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
 				data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode((String) apikey, "UTF-8");
-
+				
+				
 				// Send data
-				URL url = new URL("http://hostname:80/api");
+				URL url = new URL("http://209.236.124.35/api/api.json");
 				java.net.URLConnection conn = url.openConnection();
 				conn.setDoOutput(true);
 				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
@@ -99,6 +107,7 @@ public class AGBS extends JavaPlugin
 
 
 	}
+	
 	public void setupPermissions() 
 	{
 		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -124,8 +133,11 @@ public class AGBS extends JavaPlugin
 		setupPermissions();
 		configInit();
 		confSetup.setupConfigs();
+		getSubscriptions();
 		registerListeners();
+		t.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
+		
 	}
 
 	public void onDisable() 
