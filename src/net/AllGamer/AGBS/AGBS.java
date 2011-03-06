@@ -74,12 +74,12 @@ public class AGBS extends JavaPlugin
 		List<ConfigurationNode> sub = null;
 		List<ConfigurationNode> subs = config.getNodeList("subscriptions", sub );
 
-		for (ConfigurationNode s : sub)
+		for (ConfigurationNode s : subs)
 		{
 			try
 			{
 				
-				String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode("", "UTF-8");
+				String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode(s.toString(), "UTF-8");
 				data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 				
 				
@@ -96,7 +96,7 @@ public class AGBS extends JavaPlugin
 				String line;
 				while ((line = rd.readLine()) != null) 
 				{
-					// what to do, what to do, what to do...
+					// we need to figure out how we will handle this asap...
 				}
 				wr.close();
 				rd.close();

@@ -4,11 +4,8 @@ package net.AllGamer.AGBS;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.util.config.Configuration;
 
 /*
  * Handle events for all Player related events
@@ -37,6 +34,7 @@ public class AGBSPlayerListener extends PlayerListener
 		if (bannedPlayers.contains(player.getDisplayName().toLowerCase()))
 		{
 			event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+			log.info(AGBS.logPrefix + " " + player.getDisplayName().toLowerCase() + " tried to join again!");
 		}
 	}
 

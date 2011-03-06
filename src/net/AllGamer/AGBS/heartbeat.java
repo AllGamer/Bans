@@ -1,13 +1,11 @@
 package net.AllGamer.AGBS;
 
 import java.io.*;
-import java.*;
 import java.net.URL;
 import java.net.URLEncoder;
 
 import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
-import org.bukkit.plugin.java.JavaPlugin;
+
 
 public class heartbeat extends Thread 
 {
