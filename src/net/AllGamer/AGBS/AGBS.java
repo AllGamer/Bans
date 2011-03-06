@@ -45,7 +45,6 @@ public class AGBS extends JavaPlugin
 	public static Configuration configBanIP;
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
-	int count = 0;
 	
 	heartbeat hb = new heartbeat();
 	Thread t = new Thread( hb );
@@ -103,7 +102,7 @@ public class AGBS extends JavaPlugin
 			} 
 			catch (Exception e) 
 			{
-				log.severe(logPrefix + "an error has occured while obtaining the subscriptions");
+				log.severe(logPrefix + " An error has occured while obtaining the subscriptions");
 				log.severe(logPrefix + " " + e);
 			}
 		}
