@@ -379,7 +379,7 @@ public class AGBS extends JavaPlugin
 		{
 			if (AGBS.Permissions.has(player, "agbs.check") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*"))
 			{
-				if (split.length >= 2) 
+				if (split.length == 2) 
 				{
 					Player target = getServer().getPlayer(split[0]);	
 					if (arraySearch(onlinePlayers, target)) 
@@ -405,7 +405,41 @@ public class AGBS extends JavaPlugin
 			}
 			return true;
 		}
-		return true;
+		if (commandLabel.equalsIgnoreCase("aunbanip"))
+		{
+			if (AGBS.Permissions.has(player, "agbs.unbanip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*"))
+			{
+				if (split.length == 2) 
+				{
+					int ip = 0;
+					String name = null;
+					try 
+					{
+						ip = Integer.parseInt(split[0]);
+					} catch (NumberFormatException nfe)
+					{
+						name = split[0];
+					}
+					if (ip == 0)
+					{
+						AGBS.configBanIP.removeProperty("banned." + name.toLowerCase());
+					} else {
+						AGBS.configBanIP.removeProperty("banned." + ip);
+					}
+				}
+				else
+				{
+					player.sendMessage(AGBS.logPrefix + " Correct usage is /aunbanip [ip|name]");
+				}
+			}
+			else
+			{
+				player.sendMessage("You don't have access to this command.");
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access.");
+			}
+			return true;
+		}
 
+		return true;
 	}
 }
