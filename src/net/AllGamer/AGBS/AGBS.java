@@ -1,10 +1,8 @@
 package net.AllGamer.AGBS;
 
 import java.io.*;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -18,7 +16,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
-import org.bukkit.util.config.ConfigurationNode;
 
 
 // permissions 2.4 imports
@@ -48,6 +45,8 @@ public class AGBS extends JavaPlugin
 	
 	heartbeat hb = new heartbeat();
 	Thread t = new Thread( hb );
+	subscription sc = new subscription();
+	Thread s = new Thread( sc );
 
 	public void configInit()
 	{
@@ -65,50 +64,6 @@ public class AGBS extends JavaPlugin
 		config.load();
 		Object apikey = config.getProperty("apikey");
 		return (String)apikey;
-	}
-	
-	public void getSubscriptions()
-	{
-		String key = getAPIKEY();
-		List<ConfigurationNode> sub = null;
-		List<ConfigurationNode> subs = config.getNodeList("subscriptions", sub );
-
-		for (ConfigurationNode s : subs)
-		{
-			try
-			{
-				
-				String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode(s.toString(), "UTF-8");
-				data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
-				
-				
-				// Send data
-				URL url = new URL("http://209.236.124.35/api/subscribe.json");
-				java.net.URLConnection conn = url.openConnection();
-				conn.setDoOutput(true);
-				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-				wr.write(data);
-				wr.flush();
-
-				// Get the response
-				BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				String line;
-				while ((line = rd.readLine()) != null) 
-				{
-					// we need to figure out how we will handle this asap...
-				}
-				wr.close();
-				rd.close();
-			} 
-			catch (Exception e) 
-			{
-				log.severe(logPrefix + " An error has occured while obtaining the subscriptions");
-				log.severe(logPrefix + " " + e);
-			}
-		}
-
-
-
 	}
 	
 	public void setupPermissions() 
@@ -136,10 +91,10 @@ public class AGBS extends JavaPlugin
 		setupPermissions();
 		configInit();
 		confSetup.setupConfigs();
-		getSubscriptions();
 		registerListeners();
 		config.load();
 		t.start();
+		s.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
 		
 	}
