@@ -446,7 +446,7 @@ public class AGBS extends JavaPlugin
 				}
 				else
 				{
-					player.sendMessage(AGBS.logPrefix + " Correct usage is /aunbanip [ip|name]");
+					player.sendMessage("Correct usage is /aunbanip [ip|name]");
 				}
 			}
 			else
