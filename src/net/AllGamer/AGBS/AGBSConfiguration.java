@@ -25,9 +25,11 @@ public class AGBSConfiguration
 
 	public void setupConfigs() 
 	{
+		log.info("Checking for file in " + this.folder);
 		File config = new File(this.folder, "config.yml");
 		if (!config.exists()) 
 		{
+			log.info("File does not exist. Yay!");
 			try 
 				{
 					log.info(logPrefix + " - Creating config directory... ");

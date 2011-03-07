@@ -43,8 +43,8 @@ public class AGBS extends JavaPlugin
 	public static PermissionHandler Permissions = null;
 	heartbeat hb;
 	Thread t;
-	subscription sc = new subscription();
-	Thread s = new Thread( sc );
+	subscription sc;
+	Thread s;
 
 	public void configInit()
 	{
@@ -92,6 +92,8 @@ public class AGBS extends JavaPlugin
 		config.load();
 		hb = new heartbeat( this );
 		t = new Thread( hb );
+		sc = new subscription();
+		s = new Thread( sc );
 		t.start();
 		s.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
@@ -103,7 +105,14 @@ public class AGBS extends JavaPlugin
 		// NOTE: All registered events are automatically unregistered when a plugin is disabled
 
 		// EXAMPLE: Custom code, here we just output some info so we can check all is well
-		t.interrupt();
+		if ( t != null )
+		{
+			t.interrupt();
+		}
+		if ( s != null )
+		{
+			s.interrupt();
+		}
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " disabled!");
 	}
 
