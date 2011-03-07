@@ -276,7 +276,6 @@ public class AGBS extends JavaPlugin
 
 
 						// TODO: code for sending ban info to the api
-						// Discuss: should this be done once to clean up code or every time we call it? 
 
 					} 
 					else 
@@ -317,8 +316,7 @@ public class AGBS extends JavaPlugin
 
 
 						// TODO: code for sending ban info to the api
-						// TODO: Discuss: should this be done once to clean up code maybe with the syntax banPlayer( target, reason, apikey); ? 
-
+						
 					} 
 					else 
 					{
@@ -353,8 +351,7 @@ public class AGBS extends JavaPlugin
 
 
 						// TODO: code for sending ban info to the api
-						// TODO: Discuss: should this be done once to clean up code maybe with the syntax unbanPlayer( target, apikey ); ? 
-
+					
 					} 
 					else 
 					{
