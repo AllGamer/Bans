@@ -41,8 +41,8 @@ public class AGBS extends JavaPlugin
 	public static Configuration configBanIP;
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
-	heartbeat hb = new heartbeat();
-	Thread t = new Thread( hb );
+	heartbeat hb;
+	Thread t;
 	subscription sc = new subscription();
 	Thread s = new Thread( sc );
 
@@ -54,7 +54,6 @@ public class AGBS extends JavaPlugin
 		configExempt = new Configuration(new File(this.getDataFolder(), "exempt.yml"));
 		configBanIP = new Configuration(new File(this.getDataFolder(), "banIP.yml"));
 		confSetup = new AGBSConfiguration(this.getDataFolder(), this);
-
 	}
 
 	public static String getAPIKEY()
@@ -91,6 +90,8 @@ public class AGBS extends JavaPlugin
 		confSetup.setupConfigs();
 		registerListeners();
 		config.load();
+		hb = new heartbeat( this );
+		t = new Thread( hb );
 		t.start();
 		s.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
@@ -138,18 +139,25 @@ public class AGBS extends JavaPlugin
 		}
 		return message;
 	}
-	public String getPlayers() {
+	
+	public String getPlayers() 
+	{
 		Player[] players = getServer().getOnlinePlayers();
 		String playerNames = "";
-		for (Player p1 : players) {
-			if (playerNames.equals("")) {
+		for (Player p1 : players) 
+		{
+			if (playerNames.equals("")) 
+			{
 				playerNames += p1.getDisplayName().toLowerCase();
-			} else {
+			} 
+			else 
+			{
 				playerNames += "," + p1.getDisplayName();
 			}
 		}
 		return playerNames;
 	}
+	
 	public boolean arraySearch(Player[] list, Player target) 
 	{
 		for (Player p : list)

@@ -43,7 +43,8 @@ public class subscription extends Thread
 					String line;
 					while ((line = rd.readLine()) != null) 
 					{
-						if (line.contains("ok")) {
+						if (line.contains("ok")) 
+						{
 
 						}
 						// we need to figure out how we will handle this asap...

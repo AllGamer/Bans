@@ -8,6 +8,13 @@ import net.AllGamer.AGBS.AGBS;
 
 public class heartbeat extends Thread 
 {
+	private final AGBS AGBSPlugin;
+
+	public heartbeat(AGBS AGBSin)
+	{
+		this.AGBSPlugin = AGBSin;
+	}
+
 	public void run()
 	{
 		while (true)
@@ -15,7 +22,8 @@ public class heartbeat extends Thread
 		try
 		{
 			String key = AGBS.getAPIKEY();
-			String data = URLEncoder.encode("playerlist", "UTF-8") + "=" + URLEncoder.encode("aetaric", "UTF-8");
+			String playerList = this.AGBSPlugin.getPlayers();
+			String data = URLEncoder.encode("playerlist", "UTF-8") + "=" + URLEncoder.encode(playerList, "UTF-8");
 			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 			
 			// Send data
