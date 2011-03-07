@@ -32,7 +32,6 @@ public class AGBS extends JavaPlugin
 	public final static Logger log = Logger.getLogger("Minecraft");
 	public static String logPrefix = "[AGBS]";
 	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
-	//private final AGBSBlockListener blockListener = new AGBSBlockListener(this);
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 	public static String message = "";
 	public static String reason = "";
@@ -42,7 +41,6 @@ public class AGBS extends JavaPlugin
 	public static Configuration configBanIP;
 	private AGBSConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
-	
 	heartbeat hb = new heartbeat();
 	Thread t = new Thread( hb );
 	subscription sc = new subscription();
@@ -65,7 +63,7 @@ public class AGBS extends JavaPlugin
 		Object apikey = config.getProperty("apikey");
 		return (String)apikey;
 	}
-	
+
 	public void setupPermissions() 
 	{
 		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -96,7 +94,7 @@ public class AGBS extends JavaPlugin
 		t.start();
 		s.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
-		
+
 	}
 
 	public void onDisable() 
@@ -140,7 +138,18 @@ public class AGBS extends JavaPlugin
 		}
 		return message;
 	}
-
+	public String getPlayers() {
+		Player[] players = getServer().getOnlinePlayers();
+		String playerNames = "";
+		for (Player p1 : players) {
+			if (playerNames.equals("")) {
+				playerNames += p1.getDisplayName().toLowerCase();
+			} else {
+				playerNames += "," + p1.getDisplayName();
+			}
+		}
+		return playerNames;
+	}
 	public boolean arraySearch(Player[] list, Player target) 
 	{
 		for (Player p : list)
