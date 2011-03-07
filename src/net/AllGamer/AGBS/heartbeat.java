@@ -3,18 +3,18 @@ package net.AllGamer.AGBS;
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
+import net.AllGamer.AGBS.AGBS;
 
 
 public class heartbeat extends Thread 
 {
 	public void run()
 	{
-		int count = 0;
-		while (count < 9)
+		while (true)
 		{
-		
 		try
 		{
+			String onlinePlayers;
 			String key = AGBS.getAPIKEY();
 			String data = URLEncoder.encode("playerlist", "UTF-8") + "=" + URLEncoder.encode("aetaric", "UTF-8");
 			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
