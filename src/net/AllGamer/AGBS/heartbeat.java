@@ -14,7 +14,6 @@ public class heartbeat extends Thread
 		{
 		try
 		{
-			String onlinePlayers;
 			String key = AGBS.getAPIKEY();
 			String data = URLEncoder.encode("playerlist", "UTF-8") + "=" + URLEncoder.encode("aetaric", "UTF-8");
 			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
