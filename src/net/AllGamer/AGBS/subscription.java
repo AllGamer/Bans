@@ -15,23 +15,21 @@ public class subscription extends Thread
 	String key = AGBS.getAPIKEY();
 	List<ConfigurationNode> sub = null;
 	List<ConfigurationNode> subs = AGBS.config.getNodeList("subscriptions", sub );
-	
+
 
 	public void run()
 	{
-		
-		int count = 0;
-		while (count < 9)
+		while (true)
 		{
 			for (ConfigurationNode s : subs)
 			{
 				try
 				{
-			
+
 					String data = URLEncoder.encode("subscribe", "UTF-8") + "=" + URLEncoder.encode(s.toString(), "UTF-8");
 					data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
-			
-			
+
+
 					// Send data
 					URL url = new URL("http://209.236.124.35/api/subscribe.json");
 					java.net.URLConnection conn = url.openConnection();
@@ -45,6 +43,9 @@ public class subscription extends Thread
 					String line;
 					while ((line = rd.readLine()) != null) 
 					{
+						if (line.contains("ok")) {
+
+						}
 						// we need to figure out how we will handle this asap...
 					}
 					wr.close();
