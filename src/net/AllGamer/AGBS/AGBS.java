@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
@@ -261,7 +262,7 @@ public class AGBS extends JavaPlugin
 			}
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("abanip")) 
+		if (command.equalsIgnoreCase("abanip")) 
 		{
 			if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) 
 			{
