@@ -222,7 +222,6 @@ public class AGBS extends JavaPlugin
 		String command = commandArg.getName().toLowerCase();
 		String[] split = args;
 		Player[] onlinePlayers = getServer().getOnlinePlayers();
-
 		if (command.equalsIgnoreCase("aban")) 
 		{
 			if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
@@ -407,7 +406,7 @@ public class AGBS extends JavaPlugin
 			}
 			return true;
 		}
-		if (commandLabel.equalsIgnoreCase("aunbanip"))
+		if (command.equalsIgnoreCase("aunbanip"))
 		{
 			if (AGBS.Permissions.has(player, "agbs.unbanip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*"))
 			{
