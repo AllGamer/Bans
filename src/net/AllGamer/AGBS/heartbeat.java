@@ -22,7 +22,6 @@ public class heartbeat extends Thread
 		{
 			try
 			{
-				//AGBS.log.info("Ping!");
 				String key = AGBS.getAPIKEY();
 				String playerList = this.AGBSPlugin.getPlayers();
 				if (playerList == "")
@@ -37,7 +36,6 @@ public class heartbeat extends Thread
 				java.net.HttpURLConnection conn = (java.net.HttpURLConnection)url.openConnection();
 				conn.setDoOutput(true);
 				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-				//AGBS.log.info("Data: " + data);
 				wr.write(data);
 				wr.close();
 

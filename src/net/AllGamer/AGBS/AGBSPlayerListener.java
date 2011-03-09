@@ -34,7 +34,7 @@ public class AGBSPlayerListener extends PlayerListener
 		if (bannedPlayers.contains(player.getDisplayName().toLowerCase()))
 		{
 			event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-			log.info(AGBS.logPrefix + " " + player.getDisplayName().toLowerCase() + " tried to join again!");
+			log.info(AGBS.logPrefix + " " + player.getDisplayName() + " tried to join again!");
 		}
 	}
 
