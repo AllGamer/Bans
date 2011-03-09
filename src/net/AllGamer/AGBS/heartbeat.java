@@ -20,59 +20,63 @@ public class heartbeat extends Thread
 		BufferedReader rd;
 		while (true)
 		{
-		try
-		{
-			//AGBS.log.info("Ping!");
-			String key = AGBS.getAPIKEY();
-			String playerList = this.AGBSPlugin.getPlayers();
-			if (playerList == "")
+			try
 			{
-				playerList = "Server-Empty";
-			}
-			String data = URLEncoder.encode("playerlist", "UTF-8") + "=" + URLEncoder.encode(playerList, "UTF-8");
-			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
+				//AGBS.log.info("Ping!");
+				String key = AGBS.getAPIKEY();
+				String playerList = this.AGBSPlugin.getPlayers();
+				if (playerList == "")
+				{
+					playerList = "Server-Empty";
+				}
+				String data = URLEncoder.encode("playerlist", "UTF-8") + "=" + URLEncoder.encode(playerList, "UTF-8");
+				data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 			
-			// Send data
-			URL url = new URL("http://209.236.124.35/api/heartbeat.json");
-			java.net.HttpURLConnection conn = (java.net.HttpURLConnection)url.openConnection();
-			conn.setDoOutput(true);
-			OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-			//AGBS.log.info("Data: " + data);
-			wr.write(data);
-			wr.close();
+				// Send data
+				URL url = new URL("http://209.236.124.35/api/heartbeat.json");
+				java.net.HttpURLConnection conn = (java.net.HttpURLConnection)url.openConnection();
+				conn.setDoOutput(true);
+				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+				//AGBS.log.info("Data: " + data);
+				wr.write(data);
+				wr.close();
 
-			// Get the response
-			if (conn.getResponseCode() == 200)
-			{
-				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			}
-			else
-			{
-				rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-			}
-			//AGBS.log.info("Resp: " + conn.getResponseCode());
+				// Get the response
+				if (conn.getResponseCode() == 200)
+				{
+					rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				}
+				else
+				{
+					rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+				}
+				AGBS.log.info("Resp: " + conn.getResponseCode());
 				
-			String line;
-			while ((line = rd.readLine()) != null) 
-			{
-				//AGBS.log.info("Result: " + line);
-			}
-			if (line.contains("ok"))
-			{
-				Thread.sleep(300000);
-			}
-			else 
-			{
-				AGBS.log.severe(AGBS.logPrefix + " Error while trying to heartbeat");
-				AGBS.log.severe(AGBS.logPrefix + " Check your apikey in config.yml");
-				Thread.sleep(300000);
-			}
-			wr.close();
-			rd.close();
+				String line = "";
+				try 
+				{
+					line = rd.readLine();	
+				}
+				catch (Exception e) 
+				{
+					line = "fail";	
+				}
+				if (line.contains("ok"))
+				{
+					Thread.sleep(300000);
+				}
+				else 
+				{
+					AGBS.log.severe(AGBS.logPrefix + " Error while trying to heartbeat");
+					AGBS.log.severe(AGBS.logPrefix + " Check your apikey in config.yml");
+					Thread.sleep(300000);
+				}
+				wr.close();
+				rd.close();
 			
-			// do it again in 5 min...
+				// do it again in 5 min...
 			
-			} 
+				} 
 			catch (Exception e) 
 			{
 				AGBS.log.info("Exception!");

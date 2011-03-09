@@ -149,6 +149,19 @@ public class AGBS extends JavaPlugin
 		return message;
 	}
 	
+	public static String makesubs(String[] split, int startingIndex) 
+	{
+		message = "";
+		for (; startingIndex < split.length; startingIndex++) 
+		{
+			if (startingIndex == 1)
+				message += "" + split[startingIndex];
+			else
+				message += "" + split[startingIndex];
+		}
+		return message;
+	}
+	
 	public String getPlayers() 
 	{
 		Player[] players = getServer().getOnlinePlayers();
