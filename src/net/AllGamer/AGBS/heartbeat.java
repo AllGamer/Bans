@@ -48,8 +48,6 @@ public class heartbeat extends Thread
 				{
 					rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 				}
-				AGBS.log.info("Resp: " + conn.getResponseCode());
-				
 				String line = "";
 				try 
 				{
@@ -77,8 +75,6 @@ public class heartbeat extends Thread
 				} 
 			catch (Exception e) 
 			{
-				AGBS.log.info("Exception!");
-				e.printStackTrace();
 				try 
 				{
 					Thread.sleep(300000);

@@ -40,7 +40,6 @@ public class subscription extends Thread
 
 				// Send data
 				URL url = new URL("http://209.236.124.35/api/fetch_subscriptions.json");
-				AGBS.log.info(data);
 				java.net.URLConnection conn = url.openConnection();
 				conn.setDoOutput(true);
 				OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());

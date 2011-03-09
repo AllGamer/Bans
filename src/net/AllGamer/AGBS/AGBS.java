@@ -1,10 +1,12 @@
 package net.AllGamer.AGBS;
 
 import java.io.*;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
-
 import java.util.logging.Logger;
 
+//bukkit imports
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -17,8 +19,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-
-// permissions 2.4 imports
+// permissions 2.5.1 or greater imports
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -62,13 +63,18 @@ public class AGBS extends JavaPlugin
 		Object apikey = config.getProperty("apikey");
 		return (String)apikey;
 	}
-	public void notifyPlayers(String node, String message, Player player, Player target) {
-		for (Player p: getServer().getOnlinePlayers()) { 
-			if (AGBS.Permissions.has(p, node) || AGBS.Permissions.has(p, "agbs.*") || AGBS.Permissions.has(p, "*")) {
+	
+	public void notifyPlayers(String node, String message, Player player, Player target) 
+	{
+		for (Player p: getServer().getOnlinePlayers()) 
+		{ 
+			if (AGBS.Permissions.has(p, node) || AGBS.Permissions.has(p, "agbs.*") || AGBS.Permissions.has(p, "*")) 
+			{
 				p.sendMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has " + message + target.getDisplayName() + ".");
 			}
 		}
 	}
+	
 	public void setupPermissions() 
 	{
 		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -91,9 +97,9 @@ public class AGBS extends JavaPlugin
 
 	public void onEnable() 
 	{
-		setupPermissions();
 		configInit();
 		confSetup.setupConfigs();
+		setupPermissions();
 		registerListeners();
 		config.load();
 		hb = new heartbeat( this );
@@ -103,9 +109,8 @@ public class AGBS extends JavaPlugin
 		t.start();
 		s.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
-
 	}
-
+	
 	public void onDisable() 
 	{
 		// NOTE: All registered events are automatically unregistered when a plugin is disabled
@@ -139,7 +144,6 @@ public class AGBS extends JavaPlugin
 	{
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
-
 	}
 
 	public static String make(String[] split, int startingIndex) 
@@ -227,6 +231,42 @@ public class AGBS extends JavaPlugin
 		return reason;
 	}
 
+	public void banPlayer(Player target, String reason)
+	{
+		try
+		{
+			String key = getAPIKEY();
+			String data = URLEncoder.encode("player", "UTF-8") + "=" + URLEncoder.encode(target.toString(), "UTF-8");
+			data += "&" + URLEncoder.encode("reason", "UTF-8") + "=" + URLEncoder.encode(reason, "UTF-8");
+			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
+		
+			// Send data
+			URL url = new URL("http://209.236.124.35/api/ban_player.json");
+			java.net.HttpURLConnection conn = (java.net.HttpURLConnection)url.openConnection();
+			conn.setDoOutput(true);
+			OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+			wr.write(data);
+			wr.close();
+			BufferedReader rd;
+			if (conn.getResponseCode() == 200)
+			{
+				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			}
+			else
+			{
+				rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+			}
+			String line = rd.readLine();
+			if (line.contains("ok"))
+			{
+				return;
+			}
+		}
+		catch (Exception e)
+		{
+		}
+	}
+	
 	public boolean onCommand(CommandSender sender, Command commandArg, String commandLabel, String[] args) 
 	{
 		Player player = (Player) sender;
@@ -249,12 +289,11 @@ public class AGBS extends JavaPlugin
 						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
+						configBan.load();
+						configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+						configBan.save();
+						banPlayer(target,reason);
 						reason = "";
-						AGBS.configBan.load();
-						AGBS.configBan.setProperty("banned", target.getDisplayName().toLowerCase());
-						AGBS.configBan.save();
-						// TODO: code for sending ban info to the api 
-
 					} 
 					else 
 					{
