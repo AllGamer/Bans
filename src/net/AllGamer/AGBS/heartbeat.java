@@ -6,13 +6,17 @@ import java.net.URLEncoder;
 import net.AllGamer.AGBS.AGBS;
 
 
-public class heartbeat extends Thread 
+public class heartbeat extends Thread implements Runnable
 {
-	private final AGBS AGBSPlugin;
+	private AGBS AGBSPlugin = null;
 
 	public heartbeat(AGBS AGBSin)
 	{
 		this.AGBSPlugin = AGBSin;
+	}
+	
+	public heartbeat() {
+		
 	}
 
 	public void run()
@@ -24,6 +28,7 @@ public class heartbeat extends Thread
 			{
 				String key = AGBS.getAPIKEY();
 				String playerList = this.AGBSPlugin.getPlayers();
+
 				if (playerList == "")
 				{
 					playerList = "Server-Empty";

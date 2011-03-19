@@ -9,24 +9,24 @@ import java.net.URLEncoder;
 
 //import org.bukkit.util.config.ConfigurationNode;
 
-public class subscription extends Thread 
+public class subscription extends Thread implements Runnable
 {
 
 	String key = AGBS.getAPIKEY();
 	String[] x = AGBS.config.getString("subscriptions").split(",");
 	String temp = AGBS.makesubs(x, 0);
 	String subs = stripcrap(temp);
-	
+
 	public static String stripcrap(String s) 
 	{
-	    String good = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	    String result = "";
-	    for ( int i = 0; i < s.length(); i++ ) 
-	    {
-	        if ( good.indexOf(s.charAt(i)) >= 0 )
-	           result += s.charAt(i);
-	        }
-	    return result;
+		String good = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		String result = "";
+		for ( int i = 0; i < s.length(); i++ ) 
+		{
+			if ( good.indexOf(s.charAt(i)) >= 0 )
+				result += s.charAt(i);
+		}
+		return result;
 	}
 
 	public void run()

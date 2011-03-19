@@ -143,6 +143,8 @@ public class AGBS extends JavaPlugin
 
 	public void registerListeners() 
 	{
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new subscription(), 1L, 15L);
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new heartbeat(), 1L, 15L);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
 	}
