@@ -82,7 +82,8 @@ public class AGBS extends JavaPlugin
 
 		if (AGBS.Permissions == null) 
 		{
-			if (agbs != null) {
+			if (agbs != null)
+			{
 				this.getServer().getPluginManager().enablePlugin(agbs);
 				AGBS.Permissions = ((Permissions) agbs).getHandler();
 				log.info(logPrefix + " version " + pdfFile.getVersion() + " Permissions detected...");
