@@ -165,9 +165,6 @@ public class AGBS extends JavaPlugin
 		message = "";
 		for (; startingIndex < split.length; startingIndex++) 
 		{
-			if (startingIndex == 1)
-				message += "" + split[startingIndex];
-			else
 				message += "" + split[startingIndex];
 		}
 		return message;
