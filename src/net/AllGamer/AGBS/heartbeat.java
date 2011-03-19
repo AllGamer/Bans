@@ -6,7 +6,7 @@ import java.net.URLEncoder;
 import net.AllGamer.AGBS.AGBS;
 
 
-public class heartbeat extends Thread implements Runnable
+public class heartbeat extends Thread
 {
 	private AGBS AGBSPlugin = null;
 
@@ -15,10 +15,6 @@ public class heartbeat extends Thread implements Runnable
 		this.AGBSPlugin = AGBSin;
 	}
 	
-	public heartbeat() {
-		
-	}
-
 	public void run()
 	{
 		BufferedReader rd;

@@ -9,9 +9,8 @@ import java.net.URLEncoder;
 
 //import org.bukkit.util.config.ConfigurationNode;
 
-public class subscription extends Thread implements Runnable
+public class subscription extends Thread
 {
-
 	String key = AGBS.getAPIKEY();
 	String[] x = AGBS.config.getString("subscriptions").split(",");
 	String temp = AGBS.makesubs(x, 0);
@@ -60,7 +59,7 @@ public class subscription extends Thread implements Runnable
 				wr.close();
 				rd.close();
 				Thread.sleep(900000);
-			} 
+			}
 			catch (Exception e) 
 			{
 				AGBS.log.severe(AGBS.logPrefix + " An error has occured while obtaining the subscriptions");
