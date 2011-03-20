@@ -13,9 +13,18 @@ public class subscription extends Thread
 {
 	String key = AGBS.getAPIKEY();
 	String[] x = AGBS.config.getString("subscriptions").split(",");
+	{
+		if ((Object)x == null)
+		{
+			AGBS.log.severe(AGBS.logPrefix + " An error has occured while obtaining the subscriptions");
+			AGBS.log.severe(AGBS.logPrefix + " You haven't defined any subscriptions! Please edit the log file.");
+			this.interrupt();
+		}
+	}
+
 	String temp = AGBS.makesubs(x, 0);
 	String subs = stripcrap(temp);
-
+	
 	public static String stripcrap(String s) 
 	{
 		String good = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -49,12 +58,12 @@ public class subscription extends Thread
 				BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				String line;
 				while ((line = rd.readLine()) != null) 
-				{
+					{
 					if (line.contains("ok")) 
 					{
 
 					}
-					// we need to figure out how we will handle this asap...
+						// we need to figure out how we will handle this asap...
 				}
 				wr.close();
 				rd.close();
