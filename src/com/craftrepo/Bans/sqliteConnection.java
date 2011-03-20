@@ -1,4 +1,4 @@
-package net.AllGamer.AGBS;
+package com.craftrepo.Bans;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -27,14 +27,14 @@ public class sqliteConnection
 
 	static Logger             log = Logger.getLogger("Minecraft");
 
-	private final AGBS plugin;
+	private final Bans plugin;
 
-	public sqliteConnection(AGBS plugin)
+	public sqliteConnection(Bans plugin)
 	{
 		this.plugin = plugin;
 	}
 
-	public static String        DATABASE       = "jdbc:sqlite:plugins\\AGBS\\AGBS.db";
+	public static String        DATABASE       = "jdbc:sqlite:plugins\\Bans\\Bans.db";
 
 	private final static String PLAYER_TABLE     = "CREATE TABLE `player_bans` "
 		+ "("
@@ -57,34 +57,34 @@ public class sqliteConnection
 	public void initialize() 
 	{
 		Logger log = Logger.getLogger("Minecraft");
-		log.info(AGBS.logPrefix + " Loading SQLite");
+		log.info(Bans.logPrefix + " Loading SQLite");
 
 		if (!tableExists("player_bans")) 
 		{
-			log.info(AGBS.logPrefix + " 'player_bans' table doesn't exist, creating...");
+			log.info(Bans.logPrefix + " 'player_bans' table doesn't exist, creating...");
 			if (!createTable(PLAYER_TABLE)) 
 			{
-				log.info(AGBS.logPrefix + " Cannot make table 'player_bans', disabling plugin.");
+				log.info(Bans.logPrefix + " Cannot make table 'player_bans', disabling plugin.");
 				this.plugin.getPluginLoader().disablePlugin((Plugin) this);
 			}
 		}
 
 		if (!tableExists("ip_bans")) 
 		{
-			log.info(AGBS.logPrefix + " 'ip_bans' table doesn't exist, creating...");
+			log.info(Bans.logPrefix + " 'ip_bans' table doesn't exist, creating...");
 			if (!createTable(IP_TABLE)) 
 			{
-				log.info(AGBS.logPrefix + " Cannot make table 'ip_banns', disabling plugin.");
+				log.info(Bans.logPrefix + " Cannot make table 'ip_banns', disabling plugin.");
 				this.plugin.getPluginLoader().disablePlugin((Plugin) this);
 			}
 		}
 
 		if (!tableExists("exempt")) 
 		{
-			log.info(AGBS.logPrefix + " 'exempt' table doesn't exist, creating now.");
+			log.info(Bans.logPrefix + " 'exempt' table doesn't exist, creating now.");
 			if (!createTable(EXEMPT_TABLE)) 
 			{
-				log.info(AGBS.logPrefix + " Cannot make table 'exempt', disabling plugin.");
+				log.info(Bans.logPrefix + " Cannot make table 'exempt', disabling plugin.");
 				this.plugin.getPluginLoader().disablePlugin((Plugin) this);
 			}
 		}
@@ -108,7 +108,7 @@ public class sqliteConnection
 		}
 		catch (ClassNotFoundException e) 
 		{
-			log.info(AGBS.logPrefix + " Error loading org.sqlite.JDBC");
+			log.info(Bans.logPrefix + " Error loading org.sqlite.JDBC");
 			return false;
 		}
 		finally 
@@ -120,7 +120,7 @@ public class sqliteConnection
 			}
 			catch (SQLException e) 
 			{
-				log.info(AGBS.logPrefix + " Could not close DB Connections.");
+				log.info(Bans.logPrefix + " Could not close DB Connections.");
 				return false;
 			}
 		}
@@ -141,12 +141,12 @@ public class sqliteConnection
 		}
 		catch (SQLException ex) 
 		{
-			log.info(AGBS.logPrefix + " Table Check Exception");
+			log.info(Bans.logPrefix + " Table Check Exception");
 			return false;
 		}
 		catch (ClassNotFoundException e) 
 		{
-			log.info(AGBS.logPrefix + " Error loading org.sqlite.JDBC");
+			log.info(Bans.logPrefix + " Error loading org.sqlite.JDBC");
 			return false;
 		}
 		finally 
@@ -158,7 +158,7 @@ public class sqliteConnection
 			}
 			catch (SQLException ex) 
 			{
-				log.info(AGBS.logPrefix + " Table Check SQL Exception (on closing)");
+				log.info(Bans.logPrefix + " Table Check SQL Exception (on closing)");
 			}
 		}
 	}
@@ -177,12 +177,12 @@ public class sqliteConnection
 		}
 		catch (SQLException e) 
 		{
-			log.info(AGBS.logPrefix + " Create Table Exception");
+			log.info(Bans.logPrefix + " Create Table Exception");
 			return false;
 		}
 		catch (ClassNotFoundException e) 
 		{
-			log.info(AGBS.logPrefix + " Error loading org.sqlite.JDBC");
+			log.info(Bans.logPrefix + " Error loading org.sqlite.JDBC");
 			return false;
 		}
 		finally 
@@ -194,7 +194,7 @@ public class sqliteConnection
 			}
 			catch (SQLException e) 
 			{
-				log.info(AGBS.logPrefix + " Could not create the table (on close)");
+				log.info(Bans.logPrefix + " Could not create the table (on close)");
 				return false;
 			}
 		}

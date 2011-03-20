@@ -1,4 +1,4 @@
-package net.AllGamer.AGBS;
+package com.craftrepo.Bans;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,19 +16,19 @@ import org.bukkit.plugin.Plugin;
  * See LICENSE for licensing information.
  */
 
-public class AGBSConfiguration 
+public class BansConfiguration 
 {
 
-	private AGBS plugin;
+	private Bans plugin;
 	private File folder;
 	private final Logger log = Logger.getLogger("Minecraft");
 	private String logPrefix;
 
-	public AGBSConfiguration(File folder, AGBS instance) 
+	public BansConfiguration(File folder, Bans instance) 
 	{
 		this.folder = folder;
 		this.plugin = instance;
-		this.logPrefix = AGBS.logPrefix;
+		this.logPrefix = Bans.logPrefix;
 	}
 
 	public void setupConfigs() 
@@ -44,7 +44,7 @@ public class AGBSConfiguration
 					FileWriter fstream = new FileWriter(config);
 					BufferedWriter out = new BufferedWriter(fstream);
 
-					out.write("#AGBS Configuration");
+					out.write("#Bans Configuration");
 					out.write("");
 					out.write("\n");
 					out.write("#IMPORTANT!!!\n");
@@ -107,7 +107,7 @@ public class AGBSConfiguration
 						FileWriter fstream = new FileWriter(banned);
 						BufferedWriter out = new BufferedWriter(fstream);
 
-						out.write("#AGBS local banned user file\n");
+						out.write("#Bans local banned user file\n");
 						out.write("banned:\n");
 						out.write("    - badguy1\n");
 				
@@ -131,7 +131,7 @@ public class AGBSConfiguration
 						banned.createNewFile();
 						FileWriter fstream = new FileWriter(bannedIP);
 						BufferedWriter out = new BufferedWriter(fstream);
-						out.write("#AGBS local banned IP file\n");
+						out.write("#Bans local banned IP file\n");
 						out.write("banned:\n");
 						out.write("    - 69.69.69.69\n");
 				
@@ -156,7 +156,7 @@ public class AGBSConfiguration
 						FileWriter fstream = new FileWriter(exempt);
 						BufferedWriter out = new BufferedWriter(fstream);
 
-						out.write("#AGBS local exempt user file\n");
+						out.write("#Bans local exempt user file\n");
 						out.write("#Server owners, add yourself to this file!\n");
 						out.write("exempt:\n");
 						out.write("    - serverstaff\n");

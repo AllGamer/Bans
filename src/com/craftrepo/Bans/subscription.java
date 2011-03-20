@@ -1,4 +1,4 @@
-package net.AllGamer.AGBS;
+package com.craftrepo.Bans;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -19,18 +19,18 @@ import java.net.URLEncoder;
 
 public class subscription extends Thread
 {
-	String key = AGBS.getAPIKEY();
-	String[] x = AGBS.config.getString("subscriptions").split(",");
+	String key = Bans.getAPIKEY();
+	String[] x = Bans.config.getString("subscriptions").split(",");
 	{
 		if ((Object)x == null)
 		{
-			AGBS.log.severe(AGBS.logPrefix + " An error has occured while obtaining the subscriptions");
-			AGBS.log.severe(AGBS.logPrefix + " You haven't defined any subscriptions! Please edit the log file.");
+			Bans.log.severe(Bans.logPrefix + " An error has occured while obtaining the subscriptions");
+			Bans.log.severe(Bans.logPrefix + " You haven't defined any subscriptions! Please edit the log file.");
 			this.interrupt();
 		}
 	}
 
-	String subs = strip(AGBS.makesubs(x, 0));
+	String subs = strip(Bans.makesubs(x, 0));
 	
 	public static String strip(String s) 
 	{
@@ -78,8 +78,8 @@ public class subscription extends Thread
 			}
 			catch (Exception e) 
 			{
-				AGBS.log.severe(AGBS.logPrefix + " An error has occured while obtaining the subscriptions");
-				AGBS.log.severe(AGBS.logPrefix + " " + e);
+				Bans.log.severe(Bans.logPrefix + " An error has occured while obtaining the subscriptions");
+				Bans.log.severe(Bans.logPrefix + " " + e);
 				try 
 				{
 					Thread.sleep(900000);

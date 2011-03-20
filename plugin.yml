@@ -1,21 +1,21 @@
-name: AGBS
-main: net.AllGamer.AGBS.AGBS
+name: Bans
+main: com.craftrepo.Bans.Bans
 version: 0.1
 commands:
     aban:
-        description: Ban a user with AGBS
+        description: Ban a user with Bans API
         usage: |
                /<command> [target] [reason flags]
     abanip:
-        description: Ban a user's IP with AGBS
+        description: Ban a user's IP with the Bans API
         usage: |
                /<command> [target] [reason flags]
     acheck:
-        description: Check a user against the AGBS API
+        description: Check a user against the Bans API
         usage: |
                /<command> [target]
     aunban:
-        description: Unban a user locally and against the AGBS API
+        description: Unban a user locally and against the Bans API
         usage: |
                /<command> [target]
     aexempt:

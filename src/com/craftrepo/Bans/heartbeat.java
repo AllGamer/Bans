@@ -1,9 +1,9 @@
-package net.AllGamer.AGBS;
+package com.craftrepo.Bans;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
-import net.AllGamer.AGBS.AGBS;
+import com.craftrepo.Bans.Bans;
 
 /**
  * CraftRepo Bans for Bukkit
@@ -15,11 +15,11 @@ import net.AllGamer.AGBS.AGBS;
 
 public class heartbeat extends Thread
 {
-	private AGBS AGBSPlugin = null;
+	private Bans BansPlugin = null;
 
-	public heartbeat(AGBS AGBSin)
+	public heartbeat(Bans Bansin)
 	{
-		this.AGBSPlugin = AGBSin;
+		this.BansPlugin = Bansin;
 	}
 	
 	public void run()
@@ -29,8 +29,8 @@ public class heartbeat extends Thread
 		{
 			try
 			{
-				String key = AGBS.getAPIKEY();
-				String playerList = this.AGBSPlugin.getPlayers();
+				String key = Bans.getAPIKEY();
+				String playerList = this.BansPlugin.getPlayers();
 
 				if (playerList == "")
 				{
@@ -71,8 +71,8 @@ public class heartbeat extends Thread
 				}
 				else 
 				{
-					AGBS.log.severe(AGBS.logPrefix + " Error while trying to heartbeat");
-					AGBS.log.severe(AGBS.logPrefix + " Check your apikey in config.yml");
+					Bans.log.severe(Bans.logPrefix + " Error while trying to heartbeat");
+					Bans.log.severe(Bans.logPrefix + " Check your apikey in config.yml");
 					Thread.sleep(300000);
 				}
 				wr.close();

@@ -1,4 +1,4 @@
-package net.AllGamer.AGBS;
+package com.craftrepo.Bans;
 
 
 import java.util.logging.Logger;
@@ -15,14 +15,14 @@ import org.bukkit.event.player.PlayerLoginEvent;
  * See LICENSE for licensing information.
  */
 
-public class AGBSPlayerListener extends PlayerListener 
+public class BansPlayerListener extends PlayerListener 
 {
 	@SuppressWarnings("unused")
-	private final AGBS plugin;
+	private final Bans plugin;
 	private final Logger log = Logger.getLogger("Minecraft");
 
 
-	public AGBSPlayerListener(AGBS instance) 
+	public BansPlayerListener(Bans instance) 
 	{
 		plugin = instance;
 	}
@@ -32,13 +32,13 @@ public class AGBSPlayerListener extends PlayerListener
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		Player player = event.getPlayer();
-		AGBS.configBan.load();
-		String[] x = AGBS.configBan.getString("banned").split(",");
-		String bannedPlayers = AGBS.make(x, 0);
+		Bans.configBan.load();
+		String[] x = Bans.configBan.getString("banned").split(",");
+		String bannedPlayers = Bans.make(x, 0);
 		if (bannedPlayers.contains(player.getDisplayName().toLowerCase()))
 		{
 			event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-			log.info(AGBS.logPrefix + " " + player.getDisplayName() + " tried to join again!");
+			log.info(Bans.logPrefix + " " + player.getDisplayName() + " tried to join again!");
 		}
 	}
 

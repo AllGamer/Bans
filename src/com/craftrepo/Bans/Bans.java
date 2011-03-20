@@ -1,4 +1,4 @@
-package net.AllGamer.AGBS;
+package com.craftrepo.Bans;
 
 import java.io.*;
 import java.net.URL;
@@ -31,11 +31,11 @@ import com.nijikokun.bukkit.Permissions.Permissions;
  * See LICENSE for licensing information.
  */
 
-public class AGBS extends JavaPlugin 
+public class Bans extends JavaPlugin 
 {
 	public final static Logger log = Logger.getLogger("Minecraft");
-	public static String logPrefix = "[AGBS]";
-	private final AGBSPlayerListener playerListener = new AGBSPlayerListener(this);
+	public static String logPrefix = "[Bans]";
+	private final BansPlayerListener playerListener = new BansPlayerListener(this);
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 	public static String message = "";
 	public static String reason = "";
@@ -43,7 +43,7 @@ public class AGBS extends JavaPlugin
 	public static Configuration configExempt;
 	public static Configuration configBan;
 	public static Configuration configBanIP;
-	private AGBSConfiguration confSetup;
+	private BansConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
 	heartbeat hb;
 	Thread t;
@@ -57,7 +57,7 @@ public class AGBS extends JavaPlugin
 		configBan = new Configuration(new File(this.getDataFolder(), "bans.yml"));
 		configExempt = new Configuration(new File(this.getDataFolder(), "exempt.yml"));
 		configBanIP = new Configuration(new File(this.getDataFolder(), "banIP.yml"));
-		confSetup = new AGBSConfiguration(this.getDataFolder(), this);
+		confSetup = new BansConfiguration(this.getDataFolder(), this);
 	}
 
 	public static String getAPIKEY()
@@ -71,24 +71,24 @@ public class AGBS extends JavaPlugin
 	{
 		for (Player p: getServer().getOnlinePlayers()) 
 		{ 
-			if (AGBS.Permissions.has(p, node) || AGBS.Permissions.has(p, "agbs.*") || AGBS.Permissions.has(p, "*")) 
+			if (Bans.Permissions.has(p, node) || Bans.Permissions.has(p, "agbs.*") || Bans.Permissions.has(p, "*")) 
 			{
-				p.sendMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has " + message + target.getDisplayName() + ".");
+				p.sendMessage(ChatColor.RED + Bans.logPrefix + " " + player.getDisplayName() + " has " + message + target.getDisplayName() + ".");
 			}
 		}
 	}
 	
 	public void setupPermissions() 
 	{
-		Plugin agbs = this.getServer().getPluginManager().getPlugin("Permissions");
+		Plugin bans = this.getServer().getPluginManager().getPlugin("Permissions");
 		PluginDescriptionFile pdfFile = this.getDescription();
 
-		if (AGBS.Permissions == null) 
+		if (Bans.Permissions == null) 
 		{
-			if (agbs != null)
+			if (bans != null)
 			{
-				this.getServer().getPluginManager().enablePlugin(agbs);
-				AGBS.Permissions = ((Permissions) agbs).getHandler();
+				this.getServer().getPluginManager().enablePlugin(bans);
+				Bans.Permissions = ((Permissions) bans).getHandler();
 				log.info(logPrefix + " version " + pdfFile.getVersion() + " Permissions detected...");
 			}
 			else 
@@ -277,7 +277,7 @@ public class AGBS extends JavaPlugin
 		Player[] onlinePlayers = getServer().getOnlinePlayers();
 		if (command.equalsIgnoreCase("aban")) 
 		{
-			if (AGBS.Permissions.has(player, "agbs.ban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
+			if (Bans.Permissions.has(player, "Bans.ban") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
 				if (split.length >= 2) 
 				{
@@ -287,7 +287,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
+						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target);
 						configBan.load();
@@ -315,7 +315,7 @@ public class AGBS extends JavaPlugin
 		}
 		if (command.equalsIgnoreCase("abanip")) 
 		{
-			if (AGBS.Permissions.has(player, "agbs.banip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*")) 
+			if (Bans.Permissions.has(player, "Bans.banip") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*")) 
 			{
 				if (split.length >= 2) 
 				{
@@ -325,7 +325,7 @@ public class AGBS extends JavaPlugin
 						message = make(split, 1);
 						message = message.toLowerCase();
 						reason = makeReason(message);
-						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
+						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						configBan.setProperty("banned", target.getDisplayName().toLowerCase());
 						reason = "";
@@ -355,7 +355,7 @@ public class AGBS extends JavaPlugin
 		}
 		if (command.equalsIgnoreCase("aexempt")) 
 		{
-			if (AGBS.Permissions.has(player, "agbs.exempt") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
+			if (Bans.Permissions.has(player, "Bans.exempt") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
 				if (split.length >= 2) 
 				{
@@ -363,11 +363,11 @@ public class AGBS extends JavaPlugin
 					if (arraySearch(onlinePlayers, target)) 
 					{
 						for (Player p: onlinePlayers) { 
-							if (AGBS.Permissions.has(p, "agbs.notify.*") || AGBS.Permissions.has(p, "agbs.*") || AGBS.Permissions.has(p, "*") || AGBS.Permissions.has(p, "agbs.notify.exempt")) {
-								p.sendMessage(ChatColor.RED + AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+							if (Bans.Permissions.has(p, "Bans.notify.*") || Bans.Permissions.has(p, "Bans.*") || Bans.Permissions.has(p, "*") || Bans.Permissions.has(p, "bans.notify.exempt")) {
+								p.sendMessage(ChatColor.RED + Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 							}
 						}
-						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
+						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 						configExempt.setProperty("exempt", target.getDisplayName().toLowerCase());
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -395,14 +395,14 @@ public class AGBS extends JavaPlugin
 		}
 		if (command.equalsIgnoreCase("aunban")) 
 		{
-			if (AGBS.Permissions.has(player, "agbs.unban") || AGBS.Permissions.has(player, "agbs.*") ||  AGBS.Permissions.has(player, "*")) 
+			if (Bans.Permissions.has(player, "Bans.unban") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
 				if (split.length >= 2) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						server.broadcastMessage(AGBS.logPrefix + " " + player.getDisplayName() + " has unbanned " + target.getDisplayName() + ".");
+						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has unbanned " + target.getDisplayName() + ".");
 						configBan.removeProperty("banned." + target.getDisplayName().toLowerCase());
 						// TODO: code for adding banned name to flatfile/sqlite/mysql here
 
@@ -430,7 +430,7 @@ public class AGBS extends JavaPlugin
 		}
 		if (commandLabel.equalsIgnoreCase("acheck"))
 		{
-			if (AGBS.Permissions.has(player, "agbs.check") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*"))
+			if (Bans.Permissions.has(player, "Bans.check") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*"))
 			{
 				if (split.length == 2) 
 				{
@@ -460,7 +460,7 @@ public class AGBS extends JavaPlugin
 		}
 		if (command.equalsIgnoreCase("aunbanip"))
 		{
-			if (AGBS.Permissions.has(player, "agbs.unbanip") || AGBS.Permissions.has(player, "agbs.*") || AGBS.Permissions.has(player, "*"))
+			if (Bans.Permissions.has(player, "Bans.unbanip") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*"))
 			{
 				if (split.length == 2) 
 				{
@@ -475,9 +475,9 @@ public class AGBS extends JavaPlugin
 					}
 					if (ip == 0)
 					{
-						AGBS.configBanIP.removeProperty("banned." + name.toLowerCase());
+						Bans.configBanIP.removeProperty("banned." + name.toLowerCase());
 					} else {
-						AGBS.configBanIP.removeProperty("banned." + ip);
+						Bans.configBanIP.removeProperty("banned." + ip);
 					}
 				}
 				else
