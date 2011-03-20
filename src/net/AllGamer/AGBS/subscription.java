@@ -22,10 +22,9 @@ public class subscription extends Thread
 		}
 	}
 
-	String temp = AGBS.makesubs(x, 0);
-	String subs = stripcrap(temp);
+	String subs = strip(AGBS.makesubs(x, 0));
 	
-	public static String stripcrap(String s) 
+	public static String strip(String s) 
 	{
 		String good = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		String result = "";
