@@ -281,7 +281,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.ban") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length >= 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
@@ -309,7 +309,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -317,7 +317,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.banip") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length >= 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);	
 					if (arraySearch(onlinePlayers, target)) 
@@ -347,7 +347,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -355,7 +355,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.exempt") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length == 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
@@ -382,7 +382,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -390,7 +390,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.unban") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length == 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
@@ -417,7 +417,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -425,7 +425,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.check") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*"))
 			{
-				if (split.length == 2) 
+				if (split.length == 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);	
 					if (arraySearch(onlinePlayers, target)) 
@@ -447,7 +447,7 @@ public class Bans extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -455,7 +455,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.unbanip") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*"))
 			{
-				if (split.length == 2) 
+				if (split.length == 1) 
 				{
 					int ip = 0;
 					String name = null;
@@ -481,7 +481,7 @@ public class Bans extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access.");
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access.");
 			}
 			return true;
 		}
