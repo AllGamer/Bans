@@ -1,4 +1,4 @@
-package com.craftrepo.Bans;
+package net.craftrepo.Bans;
 
 import java.io.BufferedWriter;
 import java.io.File;

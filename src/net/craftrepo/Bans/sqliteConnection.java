@@ -1,4 +1,4 @@
-package com.craftrepo.Bans;
+package net.craftrepo.Bans;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

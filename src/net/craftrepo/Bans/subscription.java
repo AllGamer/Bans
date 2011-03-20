@@ -1,4 +1,4 @@
-package com.craftrepo.Bans;
+package net.craftrepo.Bans;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

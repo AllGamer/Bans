@@ -1,4 +1,4 @@
-package com.craftrepo.Bans;
+package net.craftrepo.Bans;
 
 import java.io.*;
 import java.net.URL;

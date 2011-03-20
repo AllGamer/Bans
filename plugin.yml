@@ -1,5 +1,5 @@
 name: Bans
-main: com.craftrepo.Bans.Bans
+main: net.craftrepo.Bans.Bans
 version: 0.1
 commands:
     aban:

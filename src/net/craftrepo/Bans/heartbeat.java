@@ -1,9 +1,9 @@
-package com.craftrepo.Bans;
+package net.craftrepo.Bans;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
-import com.craftrepo.Bans.Bans;
+import net.craftrepo.Bans.Bans;
 
 /**
  * CraftRepo Bans for Bukkit
