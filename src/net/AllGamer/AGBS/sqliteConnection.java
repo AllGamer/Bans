@@ -13,6 +13,14 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+/**
+ * CraftRepo Bans for Bukkit
+ * @author AllGamer
+ * 
+ * Copyright 2011 AllGamer, LLC.
+ * See LICENSE for licensing information.
+ */
+
 @SuppressWarnings("unused")
 public class sqliteConnection 
 {

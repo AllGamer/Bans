@@ -24,10 +24,13 @@ import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
- * AGBS for Bukkit
- *
+ * CraftRepo Bans for Bukkit
  * @author AllGamer
+ * 
+ * Copyright 2011 AllGamer, LLC.
+ * See LICENSE for licensing information.
  */
+
 public class AGBS extends JavaPlugin 
 {
 	public final static Logger log = Logger.getLogger("Minecraft");

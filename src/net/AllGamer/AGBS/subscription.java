@@ -9,6 +9,14 @@ import java.net.URLEncoder;
 
 //import org.bukkit.util.config.ConfigurationNode;
 
+/**
+ * CraftRepo Bans for Bukkit
+ * @author AllGamer
+ * 
+ * Copyright 2011 AllGamer, LLC.
+ * See LICENSE for licensing information.
+ */
+
 public class subscription extends Thread
 {
 	String key = AGBS.getAPIKEY();

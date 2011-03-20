@@ -7,10 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-/*
- * Handle events for all Player related events
+/**
+ * CraftRepo Bans for Bukkit
  * @author AllGamer
+ * 
+ * Copyright 2011 AllGamer, LLC.
+ * See LICENSE for licensing information.
  */
+
 public class AGBSPlayerListener extends PlayerListener 
 {
 	@SuppressWarnings("unused")

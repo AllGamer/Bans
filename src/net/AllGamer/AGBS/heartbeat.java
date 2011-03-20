@@ -5,6 +5,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import net.AllGamer.AGBS.AGBS;
 
+/**
+ * CraftRepo Bans for Bukkit
+ * @author AllGamer
+ * 
+ * Copyright 2011 AllGamer, LLC.
+ * See LICENSE for licensing information.
+ */
 
 public class heartbeat extends Thread
 {
