@@ -94,7 +94,7 @@ public class Bans extends JavaPlugin
 		Object apikey = config.getProperty("apikey");
 		return (String)apikey;
 	}
-	
+
 	public void notifyPlayers(String node, String message, Player player, Player target) 
 	{
 		for (Player p: getServer().getOnlinePlayers()) 
@@ -105,7 +105,7 @@ public class Bans extends JavaPlugin
 			}
 		}
 	}
-	
+
 	public void setupPermissions() 
 	{
 		Plugin bans = this.getServer().getPluginManager().getPlugin("Permissions");
@@ -144,19 +144,22 @@ public class Bans extends JavaPlugin
 		s.start();
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
 	}
-	
+
 	public void onDisable() 
 	{
-		// NOTE: All registered events are automatically unregistered when a plugin is disabled
-
-		// EXAMPLE: Custom code, here we just output some info so we can check all is well
-		if ( t != null )
+		try 
 		{
-			t.interrupt();
+			if ( t != null )
+			{
+				t.interrupt();
+			}
+			if ( s != null )
+			{
+				s.interrupt();
+			}
 		}
-		if ( s != null )
+		catch (Exception e)
 		{
-			s.interrupt();
 		}
 		log.info(logPrefix + " version " + this.getDescription().getVersion() + " disabled!");
 	}
@@ -192,17 +195,17 @@ public class Bans extends JavaPlugin
 		}
 		return message;
 	}
-	
+
 	public static String makesubs(String[] split, int startingIndex) 
 	{
 		message = "";
 		for (; startingIndex < split.length; startingIndex++) 
 		{
-				message += "" + split[startingIndex];
+			message += "" + split[startingIndex];
 		}
 		return message;
 	}
-	
+
 	public String getPlayers() 
 	{
 		Player[] players = getServer().getOnlinePlayers();
@@ -220,7 +223,7 @@ public class Bans extends JavaPlugin
 		}
 		return playerNames;
 	}
-	
+
 	public boolean arraySearch(Player[] list, Player target) 
 	{
 		for (Player p : list)
@@ -270,7 +273,7 @@ public class Bans extends JavaPlugin
 			String data = URLEncoder.encode("player", "UTF-8") + "=" + URLEncoder.encode(target.toString(), "UTF-8");
 			data += "&" + URLEncoder.encode("reason", "UTF-8") + "=" + URLEncoder.encode(reason, "UTF-8");
 			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
-		
+
 			// Send data
 			URL url = new URL("http://209.236.124.35/api/ban_player.json");
 			java.net.HttpURLConnection conn = (java.net.HttpURLConnection)url.openConnection();
@@ -297,7 +300,7 @@ public class Bans extends JavaPlugin
 		{
 		}
 	}
-	
+
 	public boolean onCommand(CommandSender sender, Command commandArg, String commandLabel, String[] args) 
 	{
 		Player player = (Player) sender;
@@ -309,14 +312,12 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.ban") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length >= 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						message = make(split, 1);
-						message = message.toLowerCase();
-						reason = makeReason(message);
+						reason = makeReason(make(split, 1).toLowerCase());
 						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						if (engine.contains("flatfiles"))
@@ -342,7 +343,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -350,14 +351,12 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.banip") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length >= 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);	
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						message = make(split, 1);
-						message = message.toLowerCase();
-						reason = makeReason(message);
+						reason = makeReason(make(split, 1).toLowerCase());
 						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						//FIXME: this bans the name, not the ip
@@ -383,7 +382,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -391,16 +390,11 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.exempt") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length == 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
 					{
-						for (Player p: onlinePlayers) { 
-							if (Bans.Permissions.has(p, "Bans.notify.*") || Bans.Permissions.has(p, "Bans.*") || Bans.Permissions.has(p, "*") || Bans.Permissions.has(p, "bans.notify.exempt")) {
-								p.sendMessage(ChatColor.RED + Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
-							}
-						}
 						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
 						if (engine.contains("flatfiles"))
 						{
@@ -408,7 +402,7 @@ public class Bans extends JavaPlugin
 						}
 
 						// TODO: code for sending ban info to the api
-						
+
 					} 
 					else 
 					{
@@ -423,7 +417,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -431,7 +425,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.unban") || Bans.Permissions.has(player, "Bans.*") ||  Bans.Permissions.has(player, "*")) 
 			{
-				if (split.length >= 2) 
+				if (split.length == 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);
 					if (arraySearch(onlinePlayers, target)) 
@@ -443,7 +437,7 @@ public class Bans extends JavaPlugin
 						}
 
 						// TODO: code for sending ban info to the api
-					
+
 					} 
 					else 
 					{
@@ -458,7 +452,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -466,7 +460,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.check") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*"))
 			{
-				if (split.length == 2) 
+				if (split.length == 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);	
 					if (arraySearch(onlinePlayers, target)) 
@@ -487,7 +481,7 @@ public class Bans extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -495,7 +489,7 @@ public class Bans extends JavaPlugin
 		{
 			if (Bans.Permissions.has(player, "Bans.unbanip") || Bans.Permissions.has(player, "Bans.*") || Bans.Permissions.has(player, "*"))
 			{
-				if (split.length == 2) 
+				if (split.length == 1) 
 				{
 					int ip = 0;
 					String name = null;
@@ -527,7 +521,7 @@ public class Bans extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command " + command + "! Denied access.");
+				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access.");
 			}
 			return true;
 		}
