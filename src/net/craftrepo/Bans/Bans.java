@@ -39,12 +39,14 @@ public class Bans extends JavaPlugin
 	private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 	public static String message = "";
 	public static String reason = "";
+	public static String engine = "";
 	public static Configuration config;
 	public static Configuration configExempt;
 	public static Configuration configBan;
 	public static Configuration configBanIP;
 	private BansConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
+	
 	heartbeat hb;
 	Thread t;
 	subscription sc;
@@ -60,6 +62,32 @@ public class Bans extends JavaPlugin
 		confSetup = new BansConfiguration(this.getDataFolder(), this);
 	}
 
+	public String pickStorageEngine()
+	{
+		config.load();
+		Object mysql = config.getProperty("mysql");
+		Object sqlite = config.getProperty("sqlite");
+		Object flatfiles = config.getProperty("flatfiles");
+		log.info(logPrefix + " mysql is " + mysql.toString() + ". sqlite is " + sqlite.toString() + ". flatfiles is " + flatfiles.toString());
+		engine = "";
+		if (mysql.toString().contains("true"))
+		{
+			String engine = "mysql";
+			return engine;
+		}
+		if (sqlite.toString().contains("true"))
+		{
+			String engine = "sqlite";
+			return engine;
+		}
+		if (flatfiles.toString().contains("true"))
+		{
+			String engine = "flatfiles";
+			return engine;
+		}
+		return engine;
+	}
+	
 	public static String getAPIKEY()
 	{
 		config.load();
@@ -106,6 +134,8 @@ public class Bans extends JavaPlugin
 		setupPermissions();
 		registerListeners();
 		config.load();
+		engine = pickStorageEngine();
+		log.info(logPrefix + " We are using " + engine);
 		hb = new heartbeat( this );
 		t = new Thread(hb);
 		sc = new subscription();
@@ -289,10 +319,13 @@ public class Bans extends JavaPlugin
 						reason = makeReason(message);
 						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-						configBan.setProperty("banned", target);
-						configBan.load();
-						configBan.setProperty("banned", target.getDisplayName().toLowerCase());
-						configBan.save();
+						if (engine.contains("flatfiles"))
+						{
+							configBan.setProperty("banned", target);
+							configBan.load();
+							configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+							configBan.save();
+						}
 						banPlayer(target,reason);
 						reason = "";
 					} 
@@ -327,11 +360,12 @@ public class Bans extends JavaPlugin
 						reason = makeReason(message);
 						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
 						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-						configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+						//FIXME: this bans the name, not the ip
+						if (engine.contains("flatfiles"))
+						{
+							configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+						}
 						reason = "";
-						// TODO: code for adding banned name to flatfile/sqlite/mysql here
-
-
 
 						// TODO: code for sending ban info to the api
 
@@ -368,10 +402,10 @@ public class Bans extends JavaPlugin
 							}
 						}
 						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
-						configExempt.setProperty("exempt", target.getDisplayName().toLowerCase());
-						// TODO: code for adding banned name to flatfile/sqlite/mysql here
-
-
+						if (engine.contains("flatfiles"))
+						{
+							configExempt.setProperty("exempt", target.getDisplayName().toLowerCase());
+						}
 
 						// TODO: code for sending ban info to the api
 						
@@ -403,10 +437,10 @@ public class Bans extends JavaPlugin
 					if (arraySearch(onlinePlayers, target)) 
 					{
 						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has unbanned " + target.getDisplayName() + ".");
-						configBan.removeProperty("banned." + target.getDisplayName().toLowerCase());
-						// TODO: code for adding banned name to flatfile/sqlite/mysql here
-
-
+						if (engine.contains("flatfiles"))
+						{
+							configBan.removeProperty("banned." + target.getDisplayName().toLowerCase());
+						}
 
 						// TODO: code for sending ban info to the api
 					
@@ -439,7 +473,6 @@ public class Bans extends JavaPlugin
 					{
 						// TODO: code for checking target name against api here
 
-
 					}
 					else 
 					{
@@ -468,16 +501,22 @@ public class Bans extends JavaPlugin
 					String name = null;
 					try 
 					{
-						ip = Integer.parseInt(split[0]);
+					ip = Integer.parseInt(split[0]);
 					} catch (NumberFormatException nfe)
 					{
 						name = split[0];
 					}
 					if (ip == 0)
 					{
-						Bans.configBanIP.removeProperty("banned." + name.toLowerCase());
+						if (engine.contains("flatfiles"))
+						{
+							Bans.configBanIP.removeProperty("banned." + name.toLowerCase());
+						}
 					} else {
-						Bans.configBanIP.removeProperty("banned." + ip);
+						if (engine.contains("flatfiles"))
+						{
+							Bans.configBanIP.removeProperty("banned." + ip);
+						}
 					}
 				}
 				else
