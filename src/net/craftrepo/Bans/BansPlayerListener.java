@@ -33,8 +33,9 @@ public class BansPlayerListener extends PlayerListener
 	{
 		Player player = event.getPlayer();
 		Bans.configBan.load();
-		String[] x = Bans.configBan.getString("banned").split(",");
-		String bannedPlayers = Bans.make(x, 0);
+		Bans.configBanIP.load();
+		String ipBannedPlayers = Bans.configBanIP.getProperty("banned").toString();
+		String bannedPlayers = Bans.configBan.getProperty("banned").toString();
 		if (bannedPlayers.contains(player.getDisplayName().toLowerCase()))
 		{
 			event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
