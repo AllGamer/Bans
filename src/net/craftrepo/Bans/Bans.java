@@ -46,7 +46,7 @@ public class Bans extends JavaPlugin
 	public static Configuration configBanIP;
 	private BansConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
-	
+
 	heartbeat hb;
 	Thread t;
 	subscription sc;
@@ -68,26 +68,21 @@ public class Bans extends JavaPlugin
 		Object mysql = config.getProperty("mysql");
 		Object sqlite = config.getProperty("sqlite");
 		Object flatfiles = config.getProperty("flatfiles");
-		log.info(logPrefix + " mysql is " + mysql.toString() + ". sqlite is " + sqlite.toString() + ". flatfiles is " + flatfiles.toString());
-		engine = "";
 		if (mysql.toString().contains("true"))
 		{
-			String engine = "mysql";
-			return engine;
+			return "mysql";
 		}
 		if (sqlite.toString().contains("true"))
 		{
-			String engine = "sqlite";
-			return engine;
+			return "sqlite";
 		}
 		if (flatfiles.toString().contains("true"))
 		{
-			String engine = "flatfiles";
-			return engine;
+			return "flatfiles";
 		}
-		return engine;
+		return "";
 	}
-	
+
 	public static String getAPIKEY()
 	{
 		config.load();
@@ -135,14 +130,13 @@ public class Bans extends JavaPlugin
 		registerListeners();
 		config.load();
 		engine = pickStorageEngine();
-		log.info(logPrefix + " We are using " + engine);
 		hb = new heartbeat( this );
 		t = new Thread(hb);
 		sc = new subscription();
 		s = new Thread(sc);
 		t.start();
 		s.start();
-		log.info(logPrefix + " version " + this.getDescription().getVersion() + " enabled!");
+		log.info(logPrefix + " version " + getDescription().getVersion() + " enabled!");
 	}
 
 	public void onDisable() 
@@ -161,7 +155,8 @@ public class Bans extends JavaPlugin
 		catch (Exception e)
 		{
 		}
-		log.info(logPrefix + " version " + this.getDescription().getVersion() + " disabled!");
+		PluginDescriptionFile pdfFile = getDescription();
+		log.info(logPrefix + " version " + pdfFile.getVersion() + " disabled!");
 	}
 
 	public boolean isDebugging(final Player player) 
@@ -318,18 +313,26 @@ public class Bans extends JavaPlugin
 					if (arraySearch(onlinePlayers, target)) 
 					{
 						reason = makeReason(make(split, 1).toLowerCase());
-						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
-						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
 						if (engine.contains("flatfiles"))
 						{
-							configBan.setProperty("banned", target);
 							configBan.load();
-							configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+							configExempt.load();
+							if (configExempt.getProperty("exempt").toString().toLowerCase().contains(target.getDisplayName().toLowerCase()))
+							{
+								player.sendMessage(logPrefix + " This player is exempted from bans!");
+								return true;
+							}
+							else
+							{
+								server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
+								target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
+								configBan.setProperty("banned", configBan.getProperty("banned").toString() + " " + target.getDisplayName().toLowerCase());
+							}
 							configBan.save();
 						}
 						banPlayer(target,reason);
 						reason = "";
-					} 
+					}
 					else 
 					{
 						player.sendMessage("Cannot find the specified player! Check your spelling again.");
@@ -353,26 +356,42 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length >= 1) 
 				{
-					Player target = getServer().getPlayer(split[0]);	
-					if (arraySearch(onlinePlayers, target)) 
+					/*
+					 *	reason = makeReason(make(split, 1).toLowerCase());
+					 *	server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target + ".");
+					 *	reason = "";
+					 *  target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
+					 *  We can't really kick an IP, so, when the user leaves and tries to join, they can't.
+					 */
+					if (engine.contains("flatfiles"))
 					{
-						reason = makeReason(make(split, 1).toLowerCase());
-						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName() + ".");
-						target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-						//FIXME: this bans the name, not the ip
-						if (engine.contains("flatfiles"))
+						int ip = 0;
+						String name = null;
+						try 
 						{
-							configBan.setProperty("banned", target.getDisplayName().toLowerCase());
+							ip = Integer.parseInt(split[0]);
+						} catch (NumberFormatException nfe)
+						{
+							name = split[0];
 						}
-						reason = "";
-
-						// TODO: code for sending ban info to the api
-
-					} 
-					else 
-					{
-						player.sendMessage("Cannot find the specified player! Check your spelling again.");
+						if (ip == 0)
+						{
+							if (engine.contains("flatfiles"))
+							{
+								configBanIP.load();
+								configBanIP.setProperty("banned", configBanIP.getProperty("banned").toString() + " " + name.toLowerCase());
+								configBanIP.save();
+							}
+						}
+						else 
+						{
+							if (engine.contains("flatfiles"))
+							{
+								configBanIP.setProperty("banned", configBanIP.getProperty("banned").toString() + " " + ip);
+							}
+						}
 					}
+					// TODO: code for sending ban info to the api
 				} 
 				else 
 				{
@@ -392,32 +411,26 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length == 1) 
 				{
-					Player target = getServer().getPlayer(split[0]);
-					if (arraySearch(onlinePlayers, target)) 
+					String target = split[0];
+					server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target + ".");
+					if (engine.contains("flatfiles") || pickStorageEngine().equalsIgnoreCase("flatfiles"))
 					{
-						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target.getDisplayName() + ".");
-						if (engine.contains("flatfiles"))
-						{
-							configExempt.setProperty("exempt", target.getDisplayName().toLowerCase());
-						}
-
-						// TODO: code for sending ban info to the api
-
-					} 
-					else 
-					{
-						player.sendMessage("Cannot find the specified player! Check your spelling again.");
+						configExempt.load();
+						configExempt.setProperty("exempt", configExempt.getProperty("exempt") + " " + target);
+						configExempt.save();
 					}
 				} 
 				else 
 				{
 					player.sendMessage("Correct usage is /aexempt [target]");
+					return true;
 				}
 			} 
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
 				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
+				return true;
 			}
 			return true;
 		}
@@ -427,21 +440,13 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length == 1) 
 				{
-					Player target = getServer().getPlayer(split[0]);
-					if (arraySearch(onlinePlayers, target)) 
+					String target = split[0];
+					server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has unbanned " + target + ".");
+					if (engine.contains("flatfiles"))
 					{
-						server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has unbanned " + target.getDisplayName() + ".");
-						if (engine.contains("flatfiles"))
-						{
-							configBan.removeProperty("banned." + target.getDisplayName().toLowerCase());
-						}
-
-						// TODO: code for sending ban info to the api
-
-					} 
-					else 
-					{
-						player.sendMessage("Cannot find the specified player! Check your spelling again.");
+						configBan.load();
+						configBan.removeProperty("banned." + target.toLowerCase());
+						configBan.save();
 					}
 				} 
 				else 
@@ -462,20 +467,27 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length == 1) 
 				{
-					Player target = getServer().getPlayer(split[0]);	
-					if (arraySearch(onlinePlayers, target)) 
+					String target = split[0];	
+					// TODO: code for checking target name against api here
+					if (engine.contains("flatfiles"))
 					{
-						// TODO: code for checking target name against api here
-
-					}
-					else 
-					{
-						player.sendMessage("Cannot find the specified player! Check your spelling again.");
+						configBan.load();
+						configBanIP.load();
+						if (configBan.getProperty("banned").toString().contains(target.toLowerCase()) || configBanIP.getProperty("banned").toString().contains(target))
+						{
+							player.sendMessage(logPrefix + " The user '" + target + "' is banned!");
+							log.info(logPrefix + player.getDisplayName() + " checked '" + target + "'s ban status.");
+						}
+						else
+						{
+							player.sendMessage(logPrefix + " The user '" + target + "' is NOT banned!");
+							log.info(logPrefix + player.getDisplayName() + " checked '" + target + "'s ban status.");
+						}
 					}
 				} 
 				else 
 				{
-					player.sendMessage("Correct usage is /acheck [target]");
+					player.sendMessage("Correct usage is /acheck [name | ip]");
 				}
 			} 
 			else
@@ -495,7 +507,7 @@ public class Bans extends JavaPlugin
 					String name = null;
 					try 
 					{
-					ip = Integer.parseInt(split[0]);
+						ip = Integer.parseInt(split[0]);
 					} catch (NumberFormatException nfe)
 					{
 						name = split[0];
@@ -504,12 +516,18 @@ public class Bans extends JavaPlugin
 					{
 						if (engine.contains("flatfiles"))
 						{
-							Bans.configBanIP.removeProperty("banned." + name.toLowerCase());
+							configBanIP.load();
+							configBanIP.removeProperty("banned." + name.toLowerCase());
+							configBanIP.save();
 						}
-					} else {
+					}
+					else 
+					{
 						if (engine.contains("flatfiles"))
 						{
-							Bans.configBanIP.removeProperty("banned." + ip);
+							configBanIP.load();
+							configBanIP.removeProperty("banned." + ip);
+							configBanIP.save();
 						}
 					}
 				}
