@@ -413,7 +413,7 @@ public class Bans extends JavaPlugin
 				{
 					String target = split[0];
 					server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target + ".");
-					if (engine.contains("flatfiles") || pickStorageEngine().equalsIgnoreCase("flatfiles"))
+					if (engine.contains("flatfiles"))
 					{
 						configExempt.load();
 						configExempt.setProperty("exempt", configExempt.getProperty("exempt") + " " + target);
@@ -445,7 +445,14 @@ public class Bans extends JavaPlugin
 					if (engine.contains("flatfiles"))
 					{
 						configBan.load();
-						configBan.removeProperty("banned." + target.toLowerCase());
+						if (!configBan.getProperty("banned").toString().toLowerCase().contains(target.toLowerCase()))
+						{
+							player.sendMessage(logPrefix + " The player '" + target + "' is not banned!");
+							return false;
+						}
+						String old = configBan.getProperty("banned").toString().toLowerCase();
+						String next = old.replace(target.toLowerCase(), "");
+						configBan.setProperty("banned", next);
 						configBan.save();
 					}
 				} 
@@ -468,7 +475,6 @@ public class Bans extends JavaPlugin
 				if (split.length == 1) 
 				{
 					String target = split[0];	
-					// TODO: code for checking target name against api here
 					if (engine.contains("flatfiles"))
 					{
 						configBan.load();
@@ -504,29 +510,26 @@ public class Bans extends JavaPlugin
 				if (split.length == 1) 
 				{
 					int ip = 0;
-					String name = null;
 					try 
 					{
 						ip = Integer.parseInt(split[0]);
 					} catch (NumberFormatException nfe)
 					{
-						name = split[0];
+						player.sendMessage(logPrefix + " '" + split[0] + "' is not a valid number.");
 					}
-					if (ip == 0)
+					if (ip != 0)
 					{
 						if (engine.contains("flatfiles"))
 						{
 							configBanIP.load();
-							configBanIP.removeProperty("banned." + name.toLowerCase());
-							configBanIP.save();
-						}
-					}
-					else 
-					{
-						if (engine.contains("flatfiles"))
-						{
-							configBanIP.load();
-							configBanIP.removeProperty("banned." + ip);
+							if (!configBanIP.getProperty("banned").toString().toLowerCase().contains(String.valueOf(ip)))
+							{
+								player.sendMessage(logPrefix + " The IP '" + ip + "' is not banned!");
+								return false;
+							}
+							String old = configBanIP.getProperty("banned").toString().toLowerCase();
+							String next = old.replace(String.valueOf(ip), "");
+							configBanIP.setProperty("banned", next);
 							configBanIP.save();
 						}
 					}
