@@ -365,7 +365,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -410,8 +410,7 @@ public class Bans extends JavaPlugin
 							}
 						}
 					}
-					// FIXME: why aren't we banning ips here? This looks like fail...
-					// TODO: code for sending ban info to the api
+					// FIXME: why aren't we kicking the player here? This looks like fail... Also does this even work AT ALL!?
 				} 
 				else 
 				{
@@ -421,7 +420,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -431,14 +430,18 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length == 1) 
 				{
-					String target = split[0];
-					server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has exempted " + target + ".");
+					Player target = getServer().getPlayer(split[0]);
+					server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has exempted " + target.getName() + ".");
 					if (engine.contains("flatfiles"))
 					{
 						configExempt.load();
-						configExempt.setProperty("exempt", configExempt.getProperty("exempt") + " " + target);
+						configExempt.setProperty("exempt", configExempt.getProperty("exempt") + " " + target.getName());
 						configExempt.save();
 					}
+					if (engine.contains("sqlite"))
+					{
+						sqliteConnection.sql("INSERT INTO EXEMPT_TABLE (id,name) VALUES (null," + target.getName() + ");");
+					}		
 				} 
 				else 
 				{
@@ -449,7 +452,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getName() + " tried to use command /" + command + "! Denied access." );
 				return true;
 			}
 			return true;
@@ -460,20 +463,30 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length == 1) 
 				{
-					String target = split[0];
-					server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has unbanned " + target + ".");
+					Player target = getServer().getPlayer(split[0]);
 					if (engine.contains("flatfiles"))
 					{
 						configBan.load();
-						if (!configBan.getProperty("banned").toString().toLowerCase().contains(target.toLowerCase()))
+						if (!configBan.getProperty("banned").toString().toLowerCase().contains(target.getName().toLowerCase()))
 						{
-							player.sendMessage(logPrefix + " The player '" + target + "' is not banned!");
+							player.sendMessage(logPrefix + " The player '" + target.getName() + "' is not banned!");
 							return false;
 						}
 						String old = configBan.getProperty("banned").toString().toLowerCase();
-						String next = old.replace(target.toLowerCase(), "");
+						String next = old.replace(target.getName().toLowerCase(), "");
 						configBan.setProperty("banned", next);
 						configBan.save();
+						server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has unbanned " + target.getName() + ".");
+					}
+					if (engine.contains("sqlite"))
+					{
+						if (!sqliteConnection.sql("SELECT * FROM PLAYER_TABLE WHERE name = '" + target.getName() + ");"))
+						{
+							player.sendMessage(logPrefix + " The player '" + target.getName() + "' is not banned!");
+							return false;
+						}
+						sqliteConnection.sql("DELETE FROM PLAYER_TABLE WHERE name = '" + target.getName() + "');");
+						server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has unbanned " + target.getName() + ".");
 					}
 				} 
 				else 
@@ -484,7 +497,7 @@ public class Bans extends JavaPlugin
 			else 
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -494,20 +507,33 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length == 1) 
 				{
-					String target = split[0];	
+					Player target = getServer().getPlayer(split[0]);	
 					if (engine.contains("flatfiles"))
 					{
 						configBan.load();
 						configBanIP.load();
-						if (configBan.getProperty("banned").toString().contains(target.toLowerCase()) || configBanIP.getProperty("banned").toString().contains(target))
+						if (configBan.getProperty("banned").toString().contains(target.getName().toLowerCase()))
 						{
-							player.sendMessage(logPrefix + " The user '" + target + "' is banned!");
-							log.info(logPrefix + player.getDisplayName() + " checked '" + target + "'s ban status.");
+							player.sendMessage(logPrefix + " The user '" + target.getName() + "' is banned!");
+							log.info(logPrefix + player.getName() + " checked '" + target.getName() + "'s ban status.");
 						}
 						else
 						{
-							player.sendMessage(logPrefix + " The user '" + target + "' is NOT banned!");
-							log.info(logPrefix + player.getDisplayName() + " checked '" + target + "'s ban status.");
+							player.sendMessage(logPrefix + " The user '" + target.getName() + "' is NOT banned!");
+							log.info(logPrefix + player.getName() + " checked '" + target.getName() + "'s ban status.");
+						}
+					}
+					if (engine.contains("sqlite"))
+					{
+						if (sqliteConnection.sql("SELECT * FROM PLAYER_TABLE WHERE name = '" + target.getName() + "';"))
+						{
+							player.sendMessage(logPrefix + " The user '" + target.getName() + "' is banned!");
+							log.info(logPrefix + player.getName() + " checked '" + target.getName() + "'s ban status.");
+						}
+						else
+						{
+							player.sendMessage(logPrefix + " The user '" + target.getName() + "' is NOT banned!");
+							log.info(logPrefix + player.getName() + " checked '" + target.getName() + "'s ban status.");
 						}
 					}
 				} 
@@ -519,7 +545,7 @@ public class Bans extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access." );
+				log.info(logPrefix + " " + player.getName() + " tried to use command /" + command + "! Denied access." );
 			}
 			return true;
 		}
@@ -552,6 +578,16 @@ public class Bans extends JavaPlugin
 							configBanIP.setProperty("banned", next);
 							configBanIP.save();
 						}
+						if (engine.contains("sqlite"))
+						{
+							String[] ipsplit = String.valueOf(ip).split(".");
+							if (!sqliteConnection.sql("SELECT * FROM IP_TABLE WHERE ip1 = '" + ipsplit[1] + "' AND ip2 = '" + ipsplit[2] + "' AND ip3 = '" + ipsplit[3] + "' AND ip4 = '" + ipsplit[4] + ");"))
+							{
+								player.sendMessage(logPrefix + " The IP '" + ip + "' is not banned!");
+								return false;
+							}
+							sqliteConnection.sql("DELETE FROM IP_TABLE WHERE ip1 = '" + ipsplit[1] + "' AND ip2 = '" + ipsplit[2] + "' AND ip3 = '" + ipsplit[3] + "' AND ip4 = '" + ipsplit[4] + ");");
+						}
 					}
 				}
 				else
@@ -562,7 +598,7 @@ public class Bans extends JavaPlugin
 			else
 			{
 				player.sendMessage("You don't have access to this command.");
-				log.info(logPrefix + " " + player.getDisplayName() + " tried to use command /" + command + "! Denied access.");
+				log.info(logPrefix + " " + player.getName() + " tried to use command /" + command + "! Denied access.");
 			}
 			return true;
 		}

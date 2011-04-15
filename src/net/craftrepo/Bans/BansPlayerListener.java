@@ -32,14 +32,25 @@ public class BansPlayerListener extends PlayerListener
 	public void onPlayerLogin(PlayerLoginEvent event)
 	{
 		Player player = event.getPlayer();
-		Bans.configBan.load();
-		Bans.configBanIP.load();
-		String ipBannedPlayers = Bans.configBanIP.getProperty("banned").toString();
-		String bannedPlayers = Bans.configBan.getProperty("banned").toString();
-		if (bannedPlayers.contains(player.getDisplayName().toLowerCase()))
+		if (Bans.engine.contains("flatfile"))
 		{
-			event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-			log.info(Bans.logPrefix + " " + player.getDisplayName() + " tried to join again!");
+			Bans.configBan.load();
+			Bans.configBanIP.load();
+			String ipBannedPlayers = Bans.configBanIP.getProperty("banned").toString();
+			String bannedPlayers = Bans.configBan.getProperty("banned").toString();
+			if (bannedPlayers.contains(player.getName().toLowerCase()))
+			{
+				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+			}
+		}
+		if (Bans.engine.contains("sqlite"))
+		{
+			if (sqliteConnection.sql("SELECT * FROM PLAYER_TABLE WHERE name = '" + player.getName() + "';"))
+			{
+				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+			}
 		}
 	}
 
