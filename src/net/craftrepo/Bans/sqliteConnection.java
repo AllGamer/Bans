@@ -1,5 +1,6 @@
 package net.craftrepo.Bans;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -11,7 +12,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.Plugin;
+import net.craftrepo.Bans.*;
 
 /**
  * CraftRepo Bans for Bukkit
@@ -24,14 +27,16 @@ import org.bukkit.plugin.Plugin;
 @SuppressWarnings("unused")
 public class sqliteConnection 
 {
+	private Bans plugin;
+	private File folder;
+	private final static Logger log = Logger.getLogger("Minecraft");
+	private String logPrefix;
 
-	static Logger             log = Logger.getLogger("Minecraft");
-
-	private final Bans plugin;
-
-	public sqliteConnection(Bans plugin)
+	public sqliteConnection()
 	{
-		this.plugin = plugin;
+		//this.folder = folder;
+		//this.plugin = plugin;
+		this.logPrefix = Bans.logPrefix;
 	}
 
 	public static String        DATABASE       = "jdbc:sqlite:plugins\\Bans\\Bans.db";
@@ -45,7 +50,10 @@ public class sqliteConnection
 	private final static String IP_TABLE    = "CREATE TABLE `ip_bans` "
 		+ "("
 		+ "`id`       	INT PRIMARY KEY, "
-		+ "'ip'    		INT NOT NULL DEFAULT '0', "
+		+ "'ip1'        INT NOT NULL DEFAULT '0', "
+		+ "'ip2'        INT NOT NULL DEFAULT '0', "
+		+ "'ip3'        INT NOT NULL DEFAULT '0', "
+		+ "'ip4'        INT NOT NULL DEFAULT '0', "
 		+ ")";
 
 	private final static String EXEMPT_TABLE = "CREATE TABLE `exempt` "
@@ -54,7 +62,7 @@ public class sqliteConnection
 		+ "`name`     	VARCHAR(32) NOT NULL DEFAULT 'Player', "
 		+ ")";
 
-	public void initialize() 
+	public boolean initialize() 
 	{
 		Logger log = Logger.getLogger("Minecraft");
 		log.info(Bans.logPrefix + " Loading SQLite");
@@ -65,7 +73,7 @@ public class sqliteConnection
 			if (!createTable(PLAYER_TABLE)) 
 			{
 				log.info(Bans.logPrefix + " Cannot make table 'player_bans', disabling plugin.");
-				this.plugin.getPluginLoader().disablePlugin((Plugin) this);
+				return false;
 			}
 		}
 
@@ -74,8 +82,8 @@ public class sqliteConnection
 			log.info(Bans.logPrefix + " 'ip_bans' table doesn't exist, creating...");
 			if (!createTable(IP_TABLE)) 
 			{
-				log.info(Bans.logPrefix + " Cannot make table 'ip_banns', disabling plugin.");
-				this.plugin.getPluginLoader().disablePlugin((Plugin) this);
+				log.info(Bans.logPrefix + " Cannot make table 'ip_bans', disabling plugin.");
+				return false;
 			}
 		}
 
@@ -85,9 +93,10 @@ public class sqliteConnection
 			if (!createTable(EXEMPT_TABLE)) 
 			{
 				log.info(Bans.logPrefix + " Cannot make table 'exempt', disabling plugin.");
-				this.plugin.getPluginLoader().disablePlugin((Plugin) this);
+				return false;
 			}
 		}
+		return true;
 	}
 
 	public static boolean sql(String sql) 

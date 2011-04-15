@@ -19,9 +19,12 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-// permissions 2.5.1 or greater imports
+//permissions 2.5.x or greater imports
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
+
+//SQL connections
+import net.craftrepo.Bans.sqliteConnection;
 
 /**
  * CraftRepo Bans for Bukkit
@@ -46,6 +49,7 @@ public class Bans extends JavaPlugin
 	public static Configuration configBanIP;
 	private BansConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
+	boolean sqliteconnection;
 
 	heartbeat hb;
 	Thread t;
@@ -74,6 +78,7 @@ public class Bans extends JavaPlugin
 		}
 		if (sqlite.toString().contains("true"))
 		{
+			sqliteconnection = new sqliteConnection().initialize();
 			return "sqlite";
 		}
 		if (flatfiles.toString().contains("true"))
@@ -317,18 +322,32 @@ public class Bans extends JavaPlugin
 						{
 							configBan.load();
 							configExempt.load();
-							if (configExempt.getProperty("exempt").toString().toLowerCase().contains(target.getDisplayName().toLowerCase()))
+							if (configExempt.getProperty("exempt").toString().toLowerCase().contains(target.getName().toLowerCase()))
 							{
 								player.sendMessage(logPrefix + " This player is exempted from bans!");
 								return true;
 							}
 							else
 							{
-								server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target.getDisplayName());
-								target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-								configBan.setProperty("banned", configBan.getProperty("banned").toString() + " " + target.getDisplayName().toLowerCase());
+								server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has banned " + target.getName());
+								target.kickPlayer("Banned by " + player.getName() + ". Reason:" + reason);
+								configBan.setProperty("banned", configBan.getProperty("banned").toString() + " " + target.getName().toLowerCase());
 							}
 							configBan.save();
+						}
+						if (engine.contentEquals("sqlite"))
+						{
+							if (sqliteConnection.sql("SELECT * FROM EXEMPT_TABLE WHERE name = '" + target.getName().toLowerCase() + "';"))
+							{
+								player.sendMessage(logPrefix + " This player is exempted from bans!");
+								return true;
+							}
+							else
+							{
+								server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has banned " + target.getName());
+								target.kickPlayer("Banned by " + player.getName() + ". Reason:" + reason);
+								sqliteConnection.sql("INSERT INTO PLAYER_TABLE (id,name) VALUES (null," + target.getName() + ");");
+							}
 						}
 						banPlayer(target,reason);
 						reason = "";
@@ -391,6 +410,7 @@ public class Bans extends JavaPlugin
 							}
 						}
 					}
+					// FIXME: why aren't we banning ips here? This looks like fail...
 					// TODO: code for sending ban info to the api
 				} 
 				else 
