@@ -53,11 +53,9 @@ public class BansConfiguration
 					out.write("#Only select one datasource, any more could cause problems... You have been warned!\n");
 					out.write("#Use mysql?\n");
 					out.write("mysql: false\n");
-					out.write("");
 					out.write("mysqldb: jdbc:mysql://localhost:3306/minecraft\n");
 					out.write("mysqluser: root\n");
 					out.write("mysqlpass: root\n");
-					out.write("mysqlport: 3306\n");
 					out.write("\n");
 					out.write("#Use sqlite?\n");
 					out.write("sqlite: false\n");

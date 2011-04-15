@@ -50,6 +50,7 @@ public class Bans extends JavaPlugin
 	private BansConfiguration confSetup;
 	public static PermissionHandler Permissions = null;
 	boolean sqliteconnection;
+	boolean mysqlconnection;
 
 	heartbeat hb;
 	Thread t;
@@ -74,6 +75,7 @@ public class Bans extends JavaPlugin
 		Object flatfiles = config.getProperty("flatfiles");
 		if (mysql.toString().contains("true"))
 		{
+			mysqlconnection = new MySQLConnection().initialize();
 			return "mysql";
 		}
 		if (sqlite.toString().contains("true"))
@@ -270,7 +272,7 @@ public class Bans extends JavaPlugin
 		try
 		{
 			String key = getAPIKEY();
-			String data = URLEncoder.encode("player", "UTF-8") + "=" + URLEncoder.encode(target.toString(), "UTF-8");
+			String data = URLEncoder.encode("player", "UTF-8") + "=" + URLEncoder.encode(target.getName(), "UTF-8");
 			data += "&" + URLEncoder.encode("reason", "UTF-8") + "=" + URLEncoder.encode(reason, "UTF-8");
 			data += "&" + URLEncoder.encode("apikey", "UTF-8") + "=" + URLEncoder.encode(key, "UTF-8");
 
@@ -335,9 +337,9 @@ public class Bans extends JavaPlugin
 							}
 							configBan.save();
 						}
-						if (engine.contentEquals("sqlite"))
+						if (engine.contains("sqlite"))
 						{
-							if (sqliteConnection.sql("SELECT * FROM EXEMPT_TABLE WHERE name = '" + target.getName().toLowerCase() + "';"))
+							if (sqliteConnection.sql("SELECT * FROM exempt WHERE name = '" + target.getName().toLowerCase() + "';"))
 							{
 								player.sendMessage(logPrefix + " This player is exempted from bans!");
 								return true;
@@ -346,7 +348,21 @@ public class Bans extends JavaPlugin
 							{
 								server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has banned " + target.getName());
 								target.kickPlayer("Banned by " + player.getName() + ". Reason:" + reason);
-								sqliteConnection.sql("INSERT INTO PLAYER_TABLE (id,name) VALUES (null," + target.getName() + ");");
+								sqliteConnection.sql("INSERT INTO player_bans (id,name) VALUES (null," + target.getName() + ");");
+							}
+						}
+						if (engine.contains("mysql"))
+						{
+							if (MySQLConnection.sql("SELECT * FROM exempt WHERE name = '" + target.getName().toLowerCase() + "';"))
+							{
+								player.sendMessage(logPrefix + " This player is exempted from bans!");
+								return true;
+							}
+							else
+							{
+								server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has banned " + target.getName());
+								target.kickPlayer("Banned by " + player.getName() + ". Reason:" + reason);
+								MySQLConnection.sql("INSERT INTO player_bans (id,name) VALUES (null," + target.getName() + ");");
 							}
 						}
 						banPlayer(target,reason);
@@ -431,17 +447,23 @@ public class Bans extends JavaPlugin
 				if (split.length == 1) 
 				{
 					Player target = getServer().getPlayer(split[0]);
-					server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has exempted " + target.getName() + ".");
 					if (engine.contains("flatfiles"))
 					{
 						configExempt.load();
 						configExempt.setProperty("exempt", configExempt.getProperty("exempt") + " " + target.getName());
 						configExempt.save();
+						server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has exempted " + target.getName() + ".");
 					}
 					if (engine.contains("sqlite"))
 					{
-						sqliteConnection.sql("INSERT INTO EXEMPT_TABLE (id,name) VALUES (null," + target.getName() + ");");
-					}		
+						sqliteConnection.sql("INSERT INTO exempt (id,name) VALUES (null," + target.getName() + ");");
+						server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has exempted " + target.getName() + ".");
+					}
+					if (engine.contains("mysql"))
+					{
+						MySQLConnection.sql("INSERT INTO exempt (id,name) VALUES (null," + target.getName() + ");");
+						server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has exempted " + target.getName() + ".");
+					}
 				} 
 				else 
 				{
@@ -480,12 +502,22 @@ public class Bans extends JavaPlugin
 					}
 					if (engine.contains("sqlite"))
 					{
-						if (!sqliteConnection.sql("SELECT * FROM PLAYER_TABLE WHERE name = '" + target.getName() + ");"))
+						if (!sqliteConnection.sql("SELECT * FROM player_bans WHERE name = '" + target.getName() + ");"))
 						{
 							player.sendMessage(logPrefix + " The player '" + target.getName() + "' is not banned!");
 							return false;
 						}
-						sqliteConnection.sql("DELETE FROM PLAYER_TABLE WHERE name = '" + target.getName() + "');");
+						sqliteConnection.sql("DELETE FROM player_bans WHERE name = '" + target.getName() + "');");
+						server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has unbanned " + target.getName() + ".");
+					}
+					if (engine.contains("mysql"))
+					{
+						if (!MySQLConnection.sql("SELECT * FROM player_bans WHERE name = '" + target.getName() + ");"))
+						{
+							player.sendMessage(logPrefix + " The player '" + target.getName() + "' is not banned!");
+							return false;
+						}
+						MySQLConnection.sql("DELETE FROM player_bans WHERE name = '" + target.getName() + "');");
 						server.broadcastMessage(Bans.logPrefix + " " + player.getName() + " has unbanned " + target.getName() + ".");
 					}
 				} 
@@ -525,7 +557,20 @@ public class Bans extends JavaPlugin
 					}
 					if (engine.contains("sqlite"))
 					{
-						if (sqliteConnection.sql("SELECT * FROM PLAYER_TABLE WHERE name = '" + target.getName() + "';"))
+						if (sqliteConnection.sql("SELECT * FROM player_bans WHERE name = '" + target.getName() + "';"))
+						{
+							player.sendMessage(logPrefix + " The user '" + target.getName() + "' is banned!");
+							log.info(logPrefix + player.getName() + " checked '" + target.getName() + "'s ban status.");
+						}
+						else
+						{
+							player.sendMessage(logPrefix + " The user '" + target.getName() + "' is NOT banned!");
+							log.info(logPrefix + player.getName() + " checked '" + target.getName() + "'s ban status.");
+						}
+					}
+					if (engine.contains("mysql"))
+					{
+						if (MySQLConnection.sql("SELECT * FROM player_bans WHERE name = '" + target.getName() + "';"))
 						{
 							player.sendMessage(logPrefix + " The user '" + target.getName() + "' is banned!");
 							log.info(logPrefix + player.getName() + " checked '" + target.getName() + "'s ban status.");
@@ -581,12 +626,22 @@ public class Bans extends JavaPlugin
 						if (engine.contains("sqlite"))
 						{
 							String[] ipsplit = String.valueOf(ip).split(".");
-							if (!sqliteConnection.sql("SELECT * FROM IP_TABLE WHERE ip1 = '" + ipsplit[1] + "' AND ip2 = '" + ipsplit[2] + "' AND ip3 = '" + ipsplit[3] + "' AND ip4 = '" + ipsplit[4] + ");"))
+							if (!sqliteConnection.sql("SELECT * FROM ip_bans WHERE ip1 = '" + ipsplit[1] + "' AND ip2 = '" + ipsplit[2] + "' AND ip3 = '" + ipsplit[3] + "' AND ip4 = '" + ipsplit[4] + ");"))
 							{
 								player.sendMessage(logPrefix + " The IP '" + ip + "' is not banned!");
 								return false;
 							}
 							sqliteConnection.sql("DELETE FROM IP_TABLE WHERE ip1 = '" + ipsplit[1] + "' AND ip2 = '" + ipsplit[2] + "' AND ip3 = '" + ipsplit[3] + "' AND ip4 = '" + ipsplit[4] + ");");
+						}
+						if (engine.contains("mysql"))
+						{
+							String[] ipsplit = String.valueOf(ip).split(".");
+							if (!MySQLConnection.sql("SELECT * FROM ip_bans WHERE ip1 = '" + ipsplit[1] + "' AND ip2 = '" + ipsplit[2] + "' AND ip3 = '" + ipsplit[3] + "' AND ip4 = '" + ipsplit[4] + ");"))
+							{
+								player.sendMessage(logPrefix + " The IP '" + ip + "' is not banned!");
+								return false;
+							}
+							MySQLConnection.sql("DELETE FROM IP_TABLE WHERE ip1 = '" + ipsplit[1] + "' AND ip2 = '" + ipsplit[2] + "' AND ip3 = '" + ipsplit[3] + "' AND ip4 = '" + ipsplit[4] + ");");
 						}
 					}
 				}
@@ -602,7 +657,6 @@ public class Bans extends JavaPlugin
 			}
 			return true;
 		}
-
 		return true;
 	}
 }
