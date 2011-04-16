@@ -1,6 +1,7 @@
 package net.craftrepo.Bans;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -391,42 +392,28 @@ public class Bans extends JavaPlugin
 			{
 				if (split.length >= 1) 
 				{
-					/*
-					 *	reason = makeReason(make(split, 1).toLowerCase());
-					 *	server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target + ".");
-					 *	reason = "";
-					 *  target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
-					 *  We can't really kick an IP, so, when the user leaves and tries to join, they can't.
-					 */
+					Player target = getServer().getPlayer(split[0]);
+					InetSocketAddress ip = target.getAddress();
+					String[] socketsplit = ip.toString().split(":");
+					String[] ipsplit = socketsplit[0].toString().split(".");
 					if (engine.contains("flatfiles"))
 					{
-						int ip = 0;
-						String name = null;
-						try 
-						{
-							ip = Integer.parseInt(split[0]);
-						} catch (NumberFormatException nfe)
-						{
-							name = split[0];
-						}
-						if (ip == 0)
-						{
-							if (engine.contains("flatfiles"))
-							{
-								configBanIP.load();
-								configBanIP.setProperty("banned", configBanIP.getProperty("banned").toString() + " " + name.toLowerCase());
-								configBanIP.save();
-							}
-						}
-						else 
-						{
-							if (engine.contains("flatfiles"))
-							{
-								configBanIP.setProperty("banned", configBanIP.getProperty("banned").toString() + " " + ip);
-							}
-						}
+						configBanIP.load();
+						configBanIP.setProperty("banned", configBanIP.getProperty("banned").toString() + " " + ipsplit[0]);
+						configBanIP.save();
 					}
-					// FIXME: why aren't we kicking the player here? This looks like fail... Also does this even work AT ALL!?
+					else if (engine.contains("sqlite"))
+					{
+						sqliteConnection.sql("INSERT INTO ip_bans (id,ip1,ip2,ip3,ip4) VALUES (null," + ipsplit[0] + "," + ipsplit[1] + "," + ipsplit[2] + "," + ipsplit[3] + ");");
+					}
+					else if (engine.contains("mysql"))
+					{
+						MySQLConnection.sql("INSERT INTO ip_bans (id,ip1,ip2,ip3,ip4) VALUES (null," + ipsplit[0] + "," + ipsplit[1] + "," + ipsplit[2] + "," + ipsplit[3] + ");");
+					}
+					reason = makeReason(make(split, 1).toLowerCase());
+					target.kickPlayer("Banned by " + player.getDisplayName() + ". Reason:" + reason);
+					server.broadcastMessage(Bans.logPrefix + " " + player.getDisplayName() + " has banned " + target + ".");
+					reason = "";
 				} 
 				else 
 				{
