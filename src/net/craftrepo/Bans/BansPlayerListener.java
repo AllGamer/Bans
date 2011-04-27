@@ -27,7 +27,7 @@ public class BansPlayerListener extends PlayerListener
 	}
 
 	//ONLY ADD LOGIN STUFF HERE
-	public void onPlayerLogin(PlayerLoginEvent event)
+	public void PlayerLoginEvent(PlayerLoginEvent event)
 	{
 		Player player = event.getPlayer();
 		InetSocketAddress ip = player.getAddress();
