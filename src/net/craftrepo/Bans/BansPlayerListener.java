@@ -1,12 +1,9 @@
 package net.craftrepo.Bans;
 
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
 
 /**
