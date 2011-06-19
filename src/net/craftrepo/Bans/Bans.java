@@ -140,7 +140,7 @@ public class Bans extends JavaPlugin
 		engine = pickStorageEngine();
 		hb = new heartbeat( this );
 		t = new Thread(hb);
-		sc = new subscription();
+		//sc = new subscription();
 		s = new Thread(sc);
 		t.start();
 		s.start();
@@ -182,8 +182,7 @@ public class Bans extends JavaPlugin
 
 	public void registerListeners() 
 	{
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_LOGIN, playerListener, Priority.Normal, this);
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_PRELOGIN, playerListener, Priority.Normal, this);
 	}
 
 	public static String make(String[] split, int startingIndex) 

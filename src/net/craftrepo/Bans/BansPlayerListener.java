@@ -1,11 +1,13 @@
 package net.craftrepo.Bans;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent;
 
 /**
  * CraftRepo Bans for Bukkit
@@ -27,10 +29,10 @@ public class BansPlayerListener extends PlayerListener
 	}
 
 	//ONLY ADD LOGIN STUFF HERE
-	public void PlayerLoginEvent(PlayerLoginEvent event)
-	{
-		Player player = event.getPlayer();
-		InetSocketAddress ip = player.getAddress();
+	@Override
+	public void onPlayerPreLogin(PlayerPreLoginEvent event) {
+		InetAddress ip = event.getAddress();
+		System.out.println(ip.toString());
 		String[] ipsplit = ip.toString().split(":");
 		String[] ipsql = ipsplit[0].split(".");
 		if (Bans.engine.contains("flatfile"))
@@ -39,44 +41,45 @@ public class BansPlayerListener extends PlayerListener
 			Bans.configBanIP.load();
 			String ipBannedPlayers = Bans.configBanIP.getProperty("banned").toString();
 			String bannedPlayers = Bans.configBan.getProperty("banned").toString();
-			if (bannedPlayers.contains(player.getName().toLowerCase()))
+			if (bannedPlayers.contains(event.getName().toLowerCase()))
 			{
-				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+				event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + event.getName() + " tried to join again!");
 			}
 
 			if (ipBannedPlayers.contains(ipsplit[0]))
 			{
-				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+				event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + event.getName() + " tried to join again!");
 			}
 		}
 		if (Bans.engine.contains("sqlite"))
 		{
-			if (sqliteConnection.sql("SELECT * FROM ip_bans WHERE name = '" + player.getName() + "';"))
+			if (sqliteConnection.sql("SELECT * FROM ip_bans WHERE name = '" + event.getName() + "';"))
 			{
-				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+				event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + event.getName() + " tried to join again!");
 			}
 			if (sqliteConnection.sql("SELECT * FROM ip_bans WHERE ip1 = '" + ipsql[0] + "' AND ip2 = '" + ipsql[1] + "' AND ip3 = '" + ipsql[2] + "; AND ip4 = '" + ipsql[3] + "';"))
 			{
-				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+				event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + event.getName() + " tried to join again!");
 			}
 		}
 		if (Bans.engine.contains("mysql"))
 		{
-			if (MySQLConnection.sql("SELECT * FROM player_bans WHERE name = '" + player.getName() + "';"))
+			if (MySQLConnection.sql("SELECT * FROM player_bans WHERE name = '" + event.getName() + "';"))
 			{
-				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+				event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + event.getName() + " tried to join again!");
 			}
 			if (MySQLConnection.sql("SELECT * FROM ip_bans WHERE ip1 = '" + ipsql[0] + "' AND ip2 = '" + ipsql[1] + "' AND ip3 = '" + ipsql[2] + "; AND ip4 = '" + ipsql[3] + "';"))
 			{
-				event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-				log.info(Bans.logPrefix + " " + player.getName() + " tried to join again!");
+				event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+				log.info(Bans.logPrefix + " " + event.getName() + " tried to join again!");
 			}
 		}
+		super.onPlayerPreLogin(event);
 	}
 }
 
