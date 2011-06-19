@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPreLoginEvent;
 
 /**
  * CraftRepo Bans for Bukkit
@@ -29,17 +30,16 @@ public class BansPlayerListener extends PlayerListener
 
 
 	//ONLY ADD LOGIN STUFF HERE
-	public void onPlayerLogin(PlayerLoginEvent event)
+	public void onPlayerPreLogin(PlayerPreLoginEvent event)
 	{
-		Player player = event.getPlayer();
 		Bans.configBan.load();
 		Bans.configBanIP.load();
 		String ipBannedPlayers = Bans.configBanIP.getProperty("banned").toString();
 		String bannedPlayers = Bans.configBan.getProperty("banned").toString();
-		if (bannedPlayers.contains(player.getDisplayName().toLowerCase()))
+		if (bannedPlayers.contains(event.getName().toLowerCase()))
 		{
-			event.disallow(PlayerLoginEvent.Result.KICK_FULL, "You are banned from this server!");
-			log.info(Bans.logPrefix + " " + player.getDisplayName() + " tried to join again!");
+			event.disallow(PlayerPreLoginEvent.Result.KICK_FULL, "You are banned from this server!");
+			log.info(Bans.logPrefix + " " + event.getName() + " tried to join again!");
 		}
 	}
 
